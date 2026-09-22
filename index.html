@@ -167,7 +167,9 @@
 
   /* ---------- modo fluido (telas estreitas) ---------- */
   .tree-alt{display:none}
-  body.fluid{overflow:auto; height:auto}
+  /* o overflow do elemento raiz propaga para a viewport: sem soltar o html
+     tambem, o overflow:hidden da regra base trava a rolagem no celular */
+  html.fluid, body.fluid{overflow:visible; height:auto}
   body.fluid #stage{position:static; overflow:visible}
   body.fluid #deck{position:static; width:760px; height:auto; transform:none; margin-left:auto; margin-right:auto}
   body.fluid section{position:relative; width:760px; height:auto; padding:40px 28px 120px}
@@ -860,6 +862,7 @@
     if (quer !== fluido){
       fluido = quer;
       document.body.classList.toggle('fluid', fluido);
+      document.documentElement.classList.toggle('fluid', fluido);
       tipografia(fluido);
     }
 

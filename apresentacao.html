@@ -1,0 +1,938 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PORÃO — agenda do underground</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap">
+<style>
+  :root{
+    --tinta:#12100F;
+    --tinta-2:#1A1816;
+    --card:#1C1A17;
+    --linha:#34302B;
+    --linha-2:#4A453E;
+    --papel:#E8E4DC;
+    --muted:#B8B3A9;
+    --dim:#8A857C;
+    --sangue:#E5383B;
+    --acido:#C5F82A;
+    --display:'Archivo Black', Impact, sans-serif;
+    --sans:'IBM Plex Sans', system-ui, Arial, sans-serif;
+    --mono:'IBM Plex Mono', 'Courier New', monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  html,body{height:100%; background:#000; overflow:hidden}
+  body{font-family:var(--sans); color:var(--papel); -webkit-font-smoothing:antialiased}
+
+  #stage{position:fixed; inset:0; overflow:hidden}
+  #deck{
+    position:absolute; left:50%; top:50%;
+    width:1920px; height:1080px;
+    transform-origin:center center;
+    transform:translate(-50%,-50%) scale(1);
+  }
+
+  section{
+    position:absolute; left:0; top:0; width:1920px; height:1080px;
+    padding:96px 96px 72px; flex-direction:column;
+    background:var(--tinta); color:var(--papel);
+  }
+  /* a regra de esconder precisa vencer .row/.statement, que também declaram display */
+  section:not(.is-active){display:none !important}
+  section.is-active{display:flex}
+  section.is-active.row{flex-direction:row}
+
+  /* ---------- tipografia ---------- */
+  h1{font-family:var(--display); font-size:224px; line-height:1; letter-spacing:-6px}
+  h2{font-family:var(--display); font-size:76px; line-height:1.08; letter-spacing:-2px; font-weight:400}
+  h2.big{font-size:100px; letter-spacing:-3px}
+  h3{font-size:34px; line-height:1.2; font-weight:600}
+  p{font-size:30px; line-height:1.45}
+  b{font-weight:600; color:var(--papel)}
+  .eyebrow{font-family:var(--mono); font-size:24px; letter-spacing:4px; text-transform:uppercase; color:var(--sangue)}
+  .eyebrow.dim{color:var(--dim)}
+  .mono{font-family:var(--mono); font-size:24px}
+  .muted{color:var(--muted)}
+  .dim{color:var(--dim)}
+  .red{color:var(--sangue)}
+  .acido{color:var(--acido)}
+  .sm{font-size:27px}
+  .lg{font-size:34px}
+  ul{list-style:none}
+  ul li{font-size:32px; line-height:1.6; padding-left:36px; position:relative}
+  ul li::before{content:"—"; position:absolute; left:0; color:var(--sangue)}
+
+  /* ---------- layout ---------- */
+  .head{display:flex; flex-direction:column; gap:14px}
+  .row{display:flex; flex-direction:row}
+  .col{display:flex; flex-direction:column}
+  .between{justify-content:space-between}
+  .center{align-items:center}
+  .end{align-items:flex-end}
+  .fill{flex:1}
+  .g12{gap:12px} .g16{gap:16px} .g20{gap:20px} .g24{gap:24px} .g28{gap:28px}
+  .g32{gap:32px} .g40{gap:40px} .g44{gap:44px} .g48{gap:48px} .g56{gap:56px} .g72{gap:72px}
+  .grid2{display:grid; grid-template-columns:repeat(2,1fr); gap:32px}
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:32px}
+
+  /* ---------- blocos ---------- */
+  .card{background:var(--card); padding:36px; display:flex; flex-direction:column; gap:14px}
+  /* .row vem antes no arquivo, então precisa ser reafirmado aqui para vencer .card/.box */
+  .card.row, .box.row{flex-direction:row}
+  .card.top{border-top:6px solid var(--sangue)}
+  .card.top.acid{border-top:6px solid var(--acido)}
+  .card.left{border-left:6px solid var(--sangue)}
+  .card.left.acid{border-left:6px solid var(--acido)}
+  .box{background:var(--tinta); border:2px solid var(--linha); padding:36px; display:flex; flex-direction:column; gap:14px}
+  .box.red{border-color:var(--sangue)}
+  .box.acid{border-color:var(--acido)}
+  .callout{background:var(--tinta-2); border-left:6px solid var(--acido); padding:32px}
+  .rule{height:8px; background:var(--sangue); border:0}
+  .arrow{width:56px; height:2px; background:var(--sangue); position:relative; flex:none; align-self:center}
+  .arrow::after{content:""; position:absolute; right:-2px; top:-9px; border-left:20px solid var(--sangue); border-top:10px solid transparent; border-bottom:10px solid transparent}
+
+  /* ---------- fundos alternados ---------- */
+  .bg2{background:var(--tinta-2)}
+  .bg2 .box{background:var(--tinta)}
+  .bg2 .callout{background:var(--tinta)}
+  .statement{background:var(--sangue); color:var(--tinta)}
+  .statement .eyebrow{color:var(--tinta)}
+  .statement .panel{background:var(--tinta); padding:36px; display:flex; flex-direction:column; gap:12px}
+  .statement .panel h3{font-family:var(--display); font-size:36px; color:var(--sangue); font-weight:400}
+  .statement .panel p{color:var(--muted)}
+
+  /* ---------- tabela ---------- */
+  table{border-collapse:collapse; width:100%; font-size:25px; color:var(--muted); border:1px solid var(--linha)}
+  th{background:var(--tinta); color:var(--papel); text-align:left; padding:12px 18px; font-weight:600; font-size:25px}
+  td{padding:8px 18px; border-top:1px solid var(--linha)}
+  tbody tr:nth-child(even){background:var(--card)}
+  td.k{color:var(--papel)}
+
+  /* ---------- mockups ---------- */
+  .phone{background:#0A0908; border:3px solid #3A3631; border-radius:40px; padding:22px; display:flex; flex-direction:column; gap:14px; flex:none}
+  .ev{background:var(--card); padding:22px; display:flex; flex-direction:column; gap:10px; border-left:5px solid var(--linha)}
+  .ev.now{border-left-color:var(--acido)}
+  .ev.dead{border-left-color:var(--sangue)}
+  .ev h4{font-family:var(--display); font-size:30px; line-height:1.15; font-weight:400}
+  .ev p{font-size:24px; line-height:1.35}
+  .ev .mono{font-size:24px}
+  .tab{flex:1; font-family:var(--mono); font-size:24px; text-align:center; padding:14px; background:var(--card); color:var(--dim)}
+  .tab.on{background:var(--papel); color:var(--tinta)}
+  .btn{flex:1; font-family:var(--mono); font-size:24px; text-align:center; padding:16px; background:var(--card); color:var(--papel)}
+  .btn.on{background:var(--papel); color:var(--tinta)}
+  .map{position:relative; height:470px; background:#15130F; border:1px solid var(--linha); overflow:hidden}
+  .map .st-h{position:absolute; left:0; right:0; height:2px; background:#262320}
+  .map .st-v{position:absolute; top:0; bottom:0; width:2px; background:#262320}
+  .pin{position:absolute; width:32px; height:32px; border-radius:50%; background:var(--sangue)}
+  .pin.me{width:44px; height:44px; background:var(--acido)}
+  .notif{background:var(--card); border:2px solid var(--linha); border-radius:24px; padding:32px; display:flex; flex-direction:column; gap:14px}
+  .notif.alerta{border-color:var(--sangue)}
+  .flyer{background:var(--sangue); padding:26px; display:flex; flex-direction:column; gap:8px}
+  .flyer h4{font-family:var(--display); font-size:44px; line-height:1.05; color:var(--tinta); font-weight:400}
+
+  /* ---------- swatches ---------- */
+  .sw{flex:1; padding:16px; display:flex; flex-direction:column; gap:8px}
+  .sw p{font-size:24px; line-height:1.3}
+
+  /* ---------- árvore ---------- */
+  .tree{position:relative; height:390px; flex:none}
+  .tree svg{position:absolute; inset:0; width:100%; height:100%}
+  .node{position:absolute; background:var(--card); border:2px solid var(--sangue); padding:18px; display:flex; flex-direction:column; gap:6px}
+  .node p{font-size:26px; line-height:1.25}
+  .node.root{background:var(--sangue); border-color:var(--sangue)}
+  .node.root p,.node.root h3{color:var(--tinta)}
+  .node.leaf{background:var(--tinta-2); border-color:var(--linha)}
+  .node.leaf p{color:var(--muted)}
+
+  /* ---------- HUD ---------- */
+  #hud{position:fixed; left:0; right:0; bottom:0; display:flex; justify-content:space-between; align-items:center; gap:16px;
+       padding:14px 22px; font-family:var(--mono); font-size:13px; line-height:1.3; color:#6b665e;
+       background:linear-gradient(transparent,#000 70%); pointer-events:none; white-space:nowrap}
+  @media (max-width:820px){ #hud{font-size:11px; padding:10px 14px} #marca{display:none} }
+  #hud b{color:#a49e94; font-weight:400}
+  #bar{position:fixed; left:0; top:0; height:3px; background:var(--sangue); width:0; transition:width .18s ease}
+  .notes{position:absolute; left:0; right:0; bottom:0; max-height:280px; overflow:auto; padding:28px 40px;
+         background:#0c0b0a; border-top:3px solid var(--sangue); font-size:26px; line-height:1.5; color:#b8b3a9; display:none}
+  body.notes-on section.is-active .notes{display:block}
+  .nav{position:fixed; top:0; bottom:0; width:16%; cursor:pointer; z-index:5}
+  .nav.prev{left:0} .nav.next{right:0}
+
+  #tip{display:none}
+  body.is-tiny #tip{display:inline}
+  body.is-tiny #keys{display:none}
+
+
+  /* ---------- modo fluido (telas estreitas) ---------- */
+  .tree-alt{display:none}
+  body.fluid{overflow:auto; height:auto}
+  body.fluid #stage{position:static; overflow:visible}
+  body.fluid #deck{position:static; width:760px; height:auto; transform:none; margin-left:auto; margin-right:auto}
+  body.fluid section{position:relative; width:760px; height:auto; padding:40px 28px 120px}
+  body.fluid .stackable{flex-direction:column !important}
+  body.fluid .grid2, body.fluid .grid3{grid-template-columns:1fr !important}
+  body.fluid .col, body.fluid .phone{width:auto !important; max-width:100% !important}
+  body.fluid [style*="max-width"]{max-width:100% !important}
+  body.fluid .map{width:452px !important; max-width:100% !important; align-self:center}
+  body.fluid .tree{display:none}
+  body.fluid .tree-alt{display:flex}
+  body.fluid .notes{position:static; max-height:none; margin-top:8px}
+  body.fluid .nav{display:none}
+  body.fluid h1{font-size:110px; letter-spacing:-3px}
+  body.fluid h2{font-size:48px !important; letter-spacing:-1px}
+  body.fluid h3{font-size:30px !important}
+  body.fluid table{font-size:22px}
+  body.fluid th{font-size:22px; padding:10px 12px}
+  body.fluid td{padding:8px 12px}
+  body.fluid .arrow{width:2px !important; height:44px !important; align-self:center}
+  body.fluid .arrow::after{left:-9px; right:auto; top:auto; bottom:-2px;
+    border:none; border-left:10px solid transparent; border-right:10px solid transparent;
+    border-top:20px solid var(--sangue)}
+  #hudnav{display:none; gap:10px; pointer-events:auto}
+  body.fluid #marca, body.fluid #keys, body.fluid #tip{display:none}
+  body.fluid #hudnav{display:flex}
+  #hudnav button{font-family:var(--mono); font-size:18px; line-height:1; color:#a49e94;
+    background:#1C1A17; border:1px solid #34302B; padding:8px 16px; cursor:pointer}
+
+  @media print{
+    html,body{overflow:visible; background:#fff; height:auto}
+    #stage{position:static; overflow:visible; height:auto !important}
+    #deck{zoom:1 !important; width:1920px !important; margin:0 !important}
+    section{width:1920px !important; height:1080px !important; padding:96px 96px 72px !important}
+    .tree{display:flex !important} .tree-alt{display:none !important}
+    .stackable{flex-direction:row !important}
+    #deck{position:static; transform:scale(.72) !important; transform-origin:top left; width:1920px; height:auto}
+    section{display:flex !important; position:relative; page-break-after:always; margin-bottom:24px}
+    section:not(.is-active){display:flex !important}
+    #hud,#bar,.nav,.notes{display:none !important}
+  }
+</style>
+</head>
+<body>
+
+<div id="bar"></div>
+<div class="nav prev" data-dir="-1" title="anterior"></div>
+<div class="nav next" data-dir="1" title="próximo"></div>
+
+<div id="stage">
+<div id="deck">
+
+<!-- 01 CAPA -->
+<section class="between">
+  <div class="row between center">
+    <p class="eyebrow">Documento de concepção · v0</p>
+    <p class="eyebrow dim">Android + Web</p>
+  </div>
+  <div class="col g28">
+    <h1>PORÃO</h1>
+    <hr class="rule">
+    <p class="muted" style="font-size:44px; line-height:1.35; max-width:1360px">A agenda do underground. Metal extremo, punk, HC, crust, grind e o que vier. Sem rede social, sem algoritmo e sem cadastro pra saber onde tem rolê perto de você.</p>
+  </div>
+  <p class="mono dim" style="letter-spacing:3px">MAPLIBRE · SOFTWARE LIVRE · ENTRADA SÓ POR CONVITE</p>
+  <div class="notes">O nome carrega o lugar onde o cenário sempre aconteceu. O deck cobre conceito, fluxos, regra de convite e o que já está decidido — não é especificação técnica final.</div>
+</section>
+
+<!-- 02 PROBLEMA -->
+<section class="between g56">
+  <p class="eyebrow">O problema</p>
+  <h2 class="big" style="max-width:1560px">Tem rolê a 8 km de você hoje. Você não vai ficar sabendo.</h2>
+  <div class="row g32">
+    <div class="card left fill"><h3>O story some em 24h</h3><p class="sm muted">A divulgação vive em formato descartável, dentro de uma plataforma que decide quem vê.</p></div>
+    <div class="card left fill"><h3>Só vê quem já segue</h3><p class="sm muted">A informação circula na bolha que já estava indo. Quem está chegando no cenário fica de fora.</p></div>
+    <div class="card left fill"><h3>Cancelou e ninguém soube</h3><p class="sm muted">Mudança de local e cancelamento só aparecem pra quem estava com o app aberto na hora certa.</p></div>
+    <div class="card left fill"><h3>Três rolês no mesmo sábado</h3><p class="sm muted">Sem agenda comum, as bandas competem pelas mesmas 40 pessoas por falta de coordenação.</p></div>
+  </div>
+  <div class="notes">O ponto não é "criar mais um app". É tirar a agenda do cenário de dentro de uma plataforma que não foi feita pra isso e que cobra pra entregar o recado.</div>
+</section>
+
+<!-- 03 É / NÃO É -->
+<section class="bg2 g48">
+  <div class="head">
+    <p class="eyebrow">Definição</p>
+    <h2>Uma agenda. Não uma rede social.</h2>
+  </div>
+  <div class="row g48 fill">
+    <div class="box red fill g24">
+      <h3 style="font-family:var(--display); font-size:40px; color:var(--sangue); font-weight:400; letter-spacing:1px">É ISSO</h3>
+      <ul>
+        <li>Agenda geolocalizada num raio de ~50 km</li>
+        <li>Consulta livre, anônima e sem cadastro</li>
+        <li>Mantida pelas próprias bandas, por convite</li>
+        <li>Fonte oficial de cancelamento e mudança</li>
+        <li>Link público e cartaz pronto pra compartilhar</li>
+        <li>Comentários sobre locais, só visíveis entre bandas</li>
+        <li>Dados exportáveis: .ics, JSON, sem aprisionamento</li>
+      </ul>
+    </div>
+    <div class="box fill g24">
+      <h3 style="font-family:var(--display); font-size:40px; color:var(--dim); font-weight:400; letter-spacing:1px">NÃO É ISSO</h3>
+      <ul class="muted">
+        <li>Sem feed, sem curtida, sem seguidor</li>
+        <li>Sem algoritmo: a ordem é data e distância</li>
+        <li>Sem perfil de público — quem assiste não tem conta</li>
+        <li>Sem anúncio, impulsionamento ou destaque pago</li>
+        <li>Sem comentário aberto no evento</li>
+        <li>Sem conta para espaço: local é dado, não perfil</li>
+        <li>Sem bilheteria própria na primeira versão</li>
+      </ul>
+    </div>
+  </div>
+  <div class="notes">A coluna da direita é decisão de produto, não falta de tempo. Cada item recusado é um vetor de zoeira, de treta ou de dependência de plataforma que o app não vai ter.</div>
+</section>
+
+<!-- 04 PRINCÍPIOS -->
+<section class="g48">
+  <div class="row between end">
+    <h2>Seis princípios</h2>
+    <p class="eyebrow dim">Em caso de dúvida, volte aqui</p>
+  </div>
+  <div class="grid3 fill">
+    <div class="card top"><p class="mono red">01</p><h3 style="font-size:36px">Consumir é livre e anônimo</h3><p class="sm muted">Nenhum cadastro, login ou rastreamento pra ver a agenda. Zero atrito na porta de entrada.</p></div>
+    <div class="card top"><p class="mono red">02</p><h3 style="font-size:36px">Publicar é por confiança</h3><p class="sm muted">Só entra quem foi chamado por alguém de dentro. E quem chama responde pelo que o chamado fizer.</p></div>
+    <div class="card top"><p class="mono red">03</p><h3 style="font-size:36px">Localização não é vigilância</h3><p class="sm muted">A coordenada é arredondada antes de sair do aparelho e nunca fica guardada ligada a uma pessoa.</p></div>
+    <div class="card top"><p class="mono red">04</p><h3 style="font-size:36px">Segurança antes de divulgação</h3><p class="sm muted">Quem organiza decide quanto do endereço fica público e a partir de que hora ele aparece.</p></div>
+    <div class="card top"><p class="mono red">05</p><h3 style="font-size:36px">Celular ruim, internet ruim</h3><p class="sm muted">App leve, escuro por padrão e rápido no 3G da periferia. É assim que o público chega — não com 80 MB de app.</p></div>
+    <div class="card top acid"><p class="mono acido">06</p><h3 style="font-size:36px">Posição explícita</h3><p class="sm muted">Antifascismo, antirracismo e política anti-assédio são regra de uso aplicável — não estética de banner.</p></div>
+  </div>
+  <div class="notes">O princípio 6 é o que dá base pra banir sem discussão. Está no termo que a pessoa aceita ao entrar, junto com a responsabilidade de quem convidou.</div>
+</section>
+
+<!-- 05 FLUXO PÚBLICO -->
+<section class="bg2 g56">
+  <div class="head">
+    <p class="eyebrow">Fluxo A · público, sem conta</p>
+    <h2>Abrir e saber. Sem digitar nada.</h2>
+  </div>
+  <div class="row g24">
+    <div class="box fill"><p class="mono red">01</p><h3>Abre o app</h3><p class="sm muted">Sem splash, sem tour, sem "crie sua conta".</p></div>
+    <div class="arrow"></div>
+    <div class="box fill"><p class="mono red">02</p><h3>Dá a localização</h3><p class="sm muted">Negou? Escolhe a cidade na mão. O app não trava.</p></div>
+    <div class="arrow"></div>
+    <div class="box fill"><p class="mono red">03</p><h3>Vê a agenda</h3><p class="sm muted">Hoje, amanhã, semana. Lista ou mapa, mesmo conteúdo.</p></div>
+    <div class="arrow"></div>
+    <div class="box acid fill"><p class="mono acido">04</p><h3>Abre o rolê</h3><p class="sm muted">Como chegar, salvar, ouvir a banda, compartilhar.</p></div>
+  </div>
+  <div class="callout row g48 center">
+    <p style="font-family:var(--display); font-size:64px; color:var(--acido); white-space:nowrap">15 s</p>
+    <p class="muted">é o orçamento do fluxo inteiro, da abertura até saber onde é o rolê. Se alguma tela precisar de digitação obrigatória, ela está errada. A tela vazia ("nada em 50 km") também tem saída: o app amplia o raio sozinho e mostra o mais próximo.</p>
+  </div>
+  <div class="notes">Esse é o fluxo que define o sucesso do app. Todos os outros fluxos (entrar na corrente, publicar, montar line-up, moderar) existem pra alimentar este aqui.</div>
+</section>
+
+<!-- 06 TELA AGENDA -->
+<section class="row g72 center">
+  <div class="phone" style="width:560px; gap:12px">
+    <div class="row between center" style="padding:6px">
+      <p class="mono">PORÃO</p><p class="mono dim">50 km ▾</p>
+    </div>
+    <p style="font-family:var(--display); font-size:28px; color:var(--acido); letter-spacing:2px; padding:4px">HOJE</p>
+    <div class="ev now">
+      <div class="row between"><p class="mono acido">21:00 · COMEÇA EM 3H</p><p class="mono dim">2,4 km</p></div>
+      <h4>NOITE DE CRUST</h4>
+      <p class="muted">Warcrusher · Fossa · Mofo Urbano</p>
+      <p class="dim">Bar do Zé, Centro · R$ 10</p>
+    </div>
+    <div class="ev dead">
+      <p class="mono red">CANCELADO</p>
+      <h4 style="color:var(--dim)">TRIBUTO SARCÓFAGO</h4>
+      <p class="dim">Casa Rubro · avisado hoje, 14:20</p>
+    </div>
+    <p style="font-family:var(--display); font-size:28px; color:var(--dim); letter-spacing:2px; padding:4px">SÁBADO</p>
+    <div class="ev">
+      <div class="row between"><p class="mono muted">20:00</p><p class="mono dim">31 km</p></div>
+      <h4>GRIND NO GALPÃO</h4>
+      <p class="muted">Cloaca · Desterro · +3 bandas</p>
+      <p class="dim">Endereço liberado no dia · contribuição</p>
+    </div>
+    <div class="row g12"><p class="tab on">LISTA</p><p class="tab">MAPA</p></div>
+  </div>
+  <div class="col fill g32">
+    <p class="eyebrow">Tela principal · agenda</p>
+    <h2 style="font-size:72px">A informação na ordem em que ela é usada</h2>
+    <div class="col g24">
+      <div class="row g24"><p class="mono red" style="font-size:28px">01</p><p class="muted"><b>Hora e distância primeiro.</b> É o que decide se dá pra ir. O nome do rolê vem depois.</p></div>
+      <div class="row g24"><p class="mono red" style="font-size:28px">02</p><p class="muted"><b>Hoje tem cor própria.</b> O verde ácido é usado só pra "está acontecendo" — em nenhum outro lugar do app.</p></div>
+      <div class="row g24"><p class="mono red" style="font-size:28px">03</p><p class="muted"><b>Cancelado não some.</b> Fica na lista, apagado e marcado, com a hora do aviso. É o que evita a viagem perdida.</p></div>
+      <div class="row g24"><p class="mono red" style="font-size:28px">04</p><p class="muted"><b>Endereço pode esperar.</b> Quando o local é protegido, o card diz quando o endereço aparece.</p></div>
+    </div>
+  </div>
+  <div class="notes">Mockup de conceito, não de UI final. Nomes de banda e local são fictícios. A hierarquia visual (hora → título → line-up → local/valor) é a parte a manter.</div>
+</section>
+
+<!-- 07 MAPA + DETALHE -->
+<section class="bg2 row g56 center">
+  <div class="phone" style="width:500px">
+    <p class="mono dim" style="padding:4px">MAPA · 50 KM</p>
+    <div class="map">
+      <svg viewBox="0 0 452 470" preserveAspectRatio="none" aria-label="mapa estilizado da cidade" style="position:absolute; left:0; top:0; width:100%; height:100%"><rect width="452" height="470" fill="#15130F"/><g><rect x="0" y="0" width="28" height="34" fill="#1A1714"/><rect x="0" y="40" width="28" height="50" fill="#1B1815"/><rect x="0" y="96" width="28" height="58" fill="#181613"/><rect x="0" y="160" width="28" height="66" fill="#1C1916"/><rect x="0" y="232" width="28" height="62" fill="#1A1714"/><rect x="0" y="300" width="28" height="66" fill="#1B1815"/><rect x="0" y="372" width="28" height="52" fill="#181613"/><rect x="0" y="430" width="28" height="40" fill="#1C1916"/><rect x="34" y="0" width="56" height="34" fill="#1A1714"/><rect x="34" y="40" width="56" height="50" fill="#1B1815"/><rect x="34" y="96" width="56" height="58" fill="#181613"/><rect x="34" y="160" width="56" height="66" fill="#1C1916"/><rect x="34" y="232" width="56" height="62" fill="#1A1714"/><rect x="34" y="300" width="56" height="66" fill="#1B1815"/><rect x="34" y="372" width="56" height="52" fill="#181613"/><rect x="34" y="430" width="56" height="40" fill="#1C1916"/><rect x="96" y="0" width="56" height="34" fill="#1A1714"/><rect x="96" y="40" width="56" height="50" fill="#1B1815"/><rect x="96" y="96" width="56" height="58" fill="#181613"/><rect x="96" y="160" width="56" height="66" fill="#1C1916"/><rect x="96" y="232" width="56" height="62" fill="#1A1714"/><rect x="96" y="300" width="56" height="66" fill="#1B1815"/><rect x="96" y="372" width="56" height="52" fill="#181613"/><rect x="96" y="430" width="56" height="40" fill="#1C1916"/><rect x="158" y="0" width="62" height="34" fill="#1A1714"/><rect x="158" y="40" width="62" height="50" fill="#1B1815"/><rect x="158" y="96" width="62" height="58" fill="#181613"/><rect x="158" y="160" width="62" height="66" fill="#1C1916"/><rect x="158" y="232" width="62" height="62" fill="#1A1714"/><rect x="158" y="300" width="62" height="66" fill="#1B1815"/><rect x="158" y="372" width="62" height="52" fill="#181613"/><rect x="158" y="430" width="62" height="40" fill="#1C1916"/><rect x="226" y="0" width="68" height="34" fill="#1A1714"/><rect x="226" y="40" width="68" height="50" fill="#1B1815"/><rect x="226" y="96" width="68" height="58" fill="#181613"/><rect x="226" y="160" width="68" height="66" fill="#1C1916"/><rect x="226" y="232" width="68" height="62" fill="#1A1714"/><rect x="226" y="300" width="68" height="66" fill="#1B1815"/><rect x="226" y="372" width="68" height="52" fill="#181613"/><rect x="226" y="430" width="68" height="40" fill="#1C1916"/><rect x="300" y="0" width="66" height="34" fill="#1A1714"/><rect x="300" y="40" width="66" height="50" fill="#1B1815"/><rect x="300" y="96" width="66" height="58" fill="#181613"/><rect x="300" y="160" width="66" height="66" fill="#1C1916"/><rect x="300" y="232" width="66" height="62" fill="#1A1714"/><rect x="300" y="300" width="66" height="66" fill="#1B1815"/><rect x="300" y="372" width="66" height="52" fill="#181613"/><rect x="300" y="430" width="66" height="40" fill="#1C1916"/><rect x="372" y="0" width="80" height="34" fill="#1A1714"/><rect x="372" y="40" width="80" height="50" fill="#1B1815"/><rect x="372" y="96" width="80" height="58" fill="#181613"/><rect x="372" y="160" width="80" height="66" fill="#1C1916"/><rect x="372" y="232" width="80" height="62" fill="#1A1714"/><rect x="372" y="300" width="80" height="66" fill="#1B1815"/><rect x="372" y="372" width="80" height="52" fill="#181613"/><rect x="372" y="430" width="80" height="40" fill="#1C1916"/></g><path d="M-20 92 L472 196" stroke="#2A2620" stroke-width="13" fill="none"/><path d="M226 -10 L226 480" stroke="#2A2620" stroke-width="11" fill="none"/><path d="M-10 430 C 120 400, 200 470, 300 420 S 420 360, 470 380" stroke="#1B2A28" stroke-width="20" fill="none"/><path d="M-10 430 C 120 400, 200 470, 300 420 S 420 360, 470 380" stroke="#22322F" stroke-width="7" fill="none"/></svg>
+      <div class="pin me" style="left:208px; top:206px"></div>
+      <div class="pin" style="left:62px; top:112px"></div>
+      <div class="pin" style="left:332px; top:148px"></div>
+      <div class="pin" style="left:284px; top:336px"></div>
+      <div class="pin" style="left:104px; top:352px"></div>
+      <p class="mono muted" style="position:absolute; left:106px; top:112px">3 rolês</p>
+      <p class="mono acido" style="position:absolute; left:256px; top:214px">você está aqui</p>
+    </div>
+    <div class="ev now"><p class="mono acido">HOJE 21:00 · 2,4 km</p><h4 style="font-size:28px">NOITE DE CRUST</h4></div>
+  </div>
+  <div class="phone" style="width:500px">
+    <div class="flyer"><p class="mono" style="color:var(--tinta)">CARTAZ DO ROLÊ</p><h4>NOITE DE CRUST</h4></div>
+    <p class="mono acido">SEXTA, 21:00 — COMEÇA EM 3H</p>
+    <p style="font-size:26px">Warcrusher · Fossa · Mofo Urbano</p>
+    <div style="background:var(--card); padding:20px; display:flex; flex-direction:column; gap:10px">
+      <p class="muted" style="font-size:24px">Bar do Zé — R. das Flores, 120, Centro</p>
+      <p class="muted" style="font-size:24px">R$ 10 na porta · 18 anos · térreo, sem escada</p>
+      <p class="dim" style="font-size:24px">Evento antifascista · coletivo com política anti-assédio</p>
+    </div>
+    <div class="row g12"><p class="btn on">COMO CHEGAR</p><p class="btn">SALVAR</p></div>
+    <div class="row g12"><p class="btn">OUVIR</p><p class="btn">COMPARTILHAR</p></div>
+  </div>
+  <div class="col fill g28">
+    <p class="eyebrow">Mapa e detalhe</p>
+    <h2 style="font-size:64px">O mapa é fundo. O rolê é o conteúdo.</h2>
+    <p class="muted">MapLibre com estilo escuro e quase monocromático: ruas apagadas, sem POI, sem marca. Só os pins têm cor. Vários rolês no mesmo endereço viram um pin só.</p>
+    <p class="muted">Na tela do rolê, tudo que responde "dá pra ir?" fica acima da dobra: hora, line-up, endereço, valor, idade e acessibilidade. Os selos de segurança vêm junto.</p>
+    <p class="muted"><b>Compartilhar</b> gera link público e cartaz pronto — é assim que o app se espalha sem depender de rede social.</p>
+  </div>
+  <div class="notes">Tiles servidos como arquivo estático (Protomaps/OSM), sem chave de API e sem custo por requisição. O estilo do mapa é nosso, não de fornecedor.</div>
+</section>
+
+<!-- 08 LEMBRETE SEM CADASTRO -->
+<section class="g20">
+  <div class="head">
+    <p class="eyebrow">Sem conta · como o "salvar" funciona</p>
+    <h2>O aparelho lembra. O app não sabe quem você é.</h2>
+  </div>
+  <p class="muted" style="font-size:28px; max-width:1560px">Salvar um rolê não cria conta, não pede e-mail e não faz login. O que fica registrado é um <b>código do próprio aparelho</b> — o mesmo que o Android e o navegador já usam pra receber notificação — amarrado ao número do evento. Sem nome, sem e-mail, sem histórico.</p>
+  <div class="row g24">
+    <div class="box fill" style="padding:24px"><p class="mono red" style="font-size:26px">01</p><h3 style="font-size:32px">Você toca em SALVAR</h3><p class="sm muted">O aparelho pede permissão de notificação. Recusar não quebra nada.</p></div>
+    <div class="arrow"></div>
+    <div class="box fill" style="padding:24px"><p class="mono red" style="font-size:26px">02</p><h3 style="font-size:32px">O servidor guarda duas coisas</h3><p class="sm muted">O código do aparelho e o número do evento. Nada que ligue isso a uma pessoa.</p></div>
+    <div class="arrow"></div>
+    <div class="box acid fill" style="padding:24px"><p class="mono acido" style="font-size:26px">03</p><h3 style="font-size:32px">Passou a data, apaga</h3><p class="sm muted">O registro morre junto com o evento. Não vira cadastro de quem vai a quê.</p></div>
+  </div>
+  <div class="row g28">
+    <div class="card left fill" style="padding:28px"><h3 style="font-size:30px">O que você recebe</h3><p class="sm muted">O alerta das 10h com o endereço, e o aviso imediato se o rolê cair ou mudar de lugar.</p></div>
+    <div class="card left fill" style="padding:28px"><h3 style="font-size:30px">Se recusar a notificação</h3><p class="sm muted">O rolê fica salvo só no aparelho e o app avisa quando você abrir. Nada sai dali.</p></div>
+    <div class="card left acid fill" style="padding:28px"><h3 style="font-size:30px">Por que isso importa</h3><p class="sm muted">É o que dá lembrete e aviso de cancelamento sem furar o princípio 1.</p></div>
+  </div>
+  <div class="notes">Tecnicamente é um token de push (Web Push ou FCM). Ele identifica um aparelho, não uma pessoa, e não é reversível para e-mail, telefone ou conta. Trocar de aparelho ou limpar os dados do app zera tudo.</div>
+</section>
+
+<!-- 09 ÁRVORE -->
+<section class="g24">
+  <div class="head">
+    <p class="eyebrow">Entrada · fluxo B</p>
+    <h2>Ninguém se cadastra. Uma banda chama a outra.</h2>
+  </div>
+  <div class="tree">
+    <svg viewBox="0 0 1664 390" preserveAspectRatio="none">
+      <g stroke="#E5383B" stroke-width="3" fill="none">
+        <path d="M832 104 V132 H332 V160"/><path d="M832 104 V160"/><path d="M832 104 V132 H1332 V160"/>
+      </g>
+      <g stroke="#4A453E" stroke-width="3" fill="none">
+        <path d="M332 265 V292 H190 V320"/><path d="M332 265 V292 H430 V320"/>
+        <path d="M832 265 V292 H690 V320"/><path d="M832 265 V292 H930 V320"/>
+        <path d="M1332 265 V292 H1210 V320"/><path d="M1332 265 V292 H1450 V320"/>
+      </g>
+    </svg>
+    <div class="node root" style="left:712px; top:0; width:240px"><p class="mono" style="color:var(--tinta)">NÍVEL 0</p><h3 style="font-family:var(--display); font-size:30px; font-weight:400">ADMIN</h3></div>
+    <div class="node" style="left:232px; top:160px; width:200px"><p class="mono dim">BANDA</p><p>Warcrusher</p></div>
+    <div class="node" style="left:732px; top:160px; width:200px"><p class="mono dim">BANDA</p><p>Fossa</p></div>
+    <div class="node" style="left:1232px; top:160px; width:200px"><p class="mono dim">BANDA</p><p>Cloaca</p></div>
+    <div class="node leaf" style="left:100px; top:320px; width:180px"><p>Desterro</p></div>
+    <div class="node leaf" style="left:340px; top:320px; width:180px"><p>Mofo Urbano</p></div>
+    <div class="node leaf" style="left:600px; top:320px; width:180px"><p>Carniça</p></div>
+    <div class="node leaf" style="left:840px; top:320px; width:180px"><p>Rejeito</p></div>
+    <div class="node leaf" style="left:1120px; top:320px; width:180px"><p>Bile</p></div>
+    <div class="node leaf" style="left:1360px; top:320px; width:180px"><p>Fúria Cega</p></div>
+  </div>
+    <div class="tree-alt col g16">
+    <p class="mono red">NÍVEL 0 · quem abre a corrente</p>
+    <div class="card" style="background:var(--sangue); padding:18px"><h3 style="color:var(--tinta)">ADMIN</h3></div>
+    <p class="mono dim">↓ convida</p>
+    <p class="mono red">NÍVEL 1 · bandas</p>
+    <div class="row g12"><p class="btn">Warcrusher</p><p class="btn">Fossa</p><p class="btn">Cloaca</p></div>
+    <p class="mono dim">↓ cada uma convida</p>
+    <p class="mono red">NÍVEL 2 · bandas</p>
+    <div class="row g12"><p class="btn">Desterro</p><p class="btn">Mofo Urbano</p><p class="btn">Carniça</p></div>
+    <div class="row g12"><p class="btn">Rejeito</p><p class="btn">Bile</p><p class="btn">Fúria Cega</p></div>
+  </div>
+  <div class="row g32">
+    <div class="card left fill" style="padding:22px"><h3 style="font-size:30px">Nominal e de uso único</h3><p class="sm muted">Preso ao e-mail para o qual foi enviado, expira em 14 dias. Não existe link repassável.</p></div>
+    <div class="card left fill" style="padding:22px"><h3 style="font-size:30px">A árvore fica registrada</h3><p class="sm muted">Cada aresta guarda quem chamou quem e quando. É o que torna possível podar um galho inteiro depois.</p></div>
+    <div class="card left fill" style="padding:22px"><h3 style="font-size:30px">Conta é sempre de banda</h3><p class="sm muted">Não existe conta de espaço, de selo ou de produtora. Quem organiza sem ser banda publica através de uma banda do rolê.</p></div>
+  </div>
+  <div class="notes">A árvore não é só um mecanismo de entrada: é o registro de responsabilidade. Cada aresta guarda quem chamou quem e quando — é o que torna possível podar um galho inteiro depois.</div>
+</section>
+
+<!-- 10 REGRA 1 -->
+<section class="bg2 g44">
+  <div class="head">
+    <p class="eyebrow">Regra 1</p>
+    <h2>Convite não se ganha. Se conquista.</h2>
+  </div>
+  <div class="row g40 fill">
+    <div class="box fill g20">
+      <p class="mono dim" style="font-size:26px; letter-spacing:2px">MODELO INGÊNUO</p>
+      <h3 style="font-size:40px; color:var(--muted)">4 convites na mão, no dia em que entra</h3>
+      <p class="dim" style="font-size:29px">Quem entrou pra zoar já chega com quatro chaves. Um elo mal-intencionado no nível 3 abre a torneira pra um grupo inteiro antes de qualquer moderação acordar.</p>
+      <div class="row g20" style="align-items:baseline">
+        <p style="font-family:var(--display); font-size:76px; color:var(--dim); white-space:nowrap">4¹⁰</p>
+        <p class="dim" style="font-size:29px">= 1 milhão de contas em dez níveis</p>
+      </div>
+    </div>
+    <div class="box acid fill g20">
+      <p class="mono acido" style="font-size:26px; letter-spacing:2px">MODELO ADOTADO</p>
+      <h3 style="font-size:40px">Entra com zero. Ganha o primeiro depois de um rolê real</h3>
+      <p class="muted" style="font-size:29px">O primeiro convite aparece depois que a conta publica um rolê que de fato aconteceu. Os demais vêm com o tempo, até o teto de quatro simultâneos.</p>
+      <p class="muted" style="font-size:29px">Quem entrou pra zoar não tem o que oferecer, e sai sem ter distribuído nada.</p>
+    </div>
+  </div>
+  <div class="row g32">
+    <div class="card left fill" style="padding:28px"><h3 style="font-size:30px">Quarentena</h3><p class="sm muted">As duas primeiras publicações só valem com data a partir de 48h. Mata a sabotagem de véspera.</p></div>
+    <div class="card left fill" style="padding:28px"><h3 style="font-size:30px">Torneira geral</h3><p class="sm muted">Teto de novas contas por mês definido pelo admin. O excedente entra em fila, não em recusa.</p></div>
+    <div class="card left fill" style="padding:28px"><h3 style="font-size:30px">Profundidade</h3><p class="sm muted">Limite de níveis configurável. Ampliar a corrente é decisão consciente, não acidente.</p></div>
+  </div>
+  <div class="notes">Três freios independentes: o convite é escasso (conquista), lento (quarentena) e limitado no agregado (torneira). Qualquer um deles segura sozinho um surto pontual.</div>
+</section>
+
+<!-- 11 COMO O CONVITE FUNCIONA -->
+<section class="bg2 g20">
+  <div class="head">
+    <p class="eyebrow">Regra 1, em detalhe</p>
+    <h2>Do convite recebido ao direito de convidar</h2>
+  </div>
+  <div class="row g20">
+    <div class="box fill" style="padding:28px"><p class="mono dim" style="font-size:26px">ESTADO 01</p><h3 style="font-size:30px">Convidada</h3><p class="sm muted">Recebeu o e-mail nominal. Tem 14 dias pra aceitar; depois disso o convite morre e a cota volta pra quem chamou.</p></div>
+    <div class="arrow"></div>
+    <div class="box fill" style="padding:28px"><p class="mono dim" style="font-size:26px">ESTADO 02</p><h3 style="font-size:30px">Em quarentena</h3><p class="sm muted">Já publica, mas só rolê com data a partir de 48h. Zero convites na mão.</p></div>
+    <div class="arrow"></div>
+    <div class="box fill" style="padding:28px"><p class="mono dim" style="font-size:26px">ESTADO 03</p><h3 style="font-size:30px">Ativa</h3><p class="sm muted">Publicou um rolê que aconteceu de verdade. Sai da quarentena e publica sem trava de data.</p></div>
+    <div class="arrow"></div>
+    <div class="box acid fill" style="padding:28px"><p class="mono acido" style="font-size:26px">ESTADO 04</p><h3 style="font-size:30px">Com direito de convite</h3><p class="sm muted">Ganha o primeiro convite. Depois, mais um a cada 60 dias de conta ativa.</p></div>
+  </div>
+  <div class="row g28">
+    <div class="card left fill" style="padding:26px"><h3 style="font-size:30px">Teto de 4 ao mesmo tempo</h3><p class="sm muted">Não acumula. Convite parado não vira estoque pra distribuir de uma vez.</p></div>
+    <div class="card left fill" style="padding:26px"><h3 style="font-size:30px">A cota volta</h3><p class="sm muted">Convite não aceito em 14 dias devolve a vaga. Ninguém fica preso a quem sumiu.</p></div>
+    <div class="card left fill" style="padding:26px"><h3 style="font-size:30px">Torneira do admin</h3><p class="sm muted">Teto global de novas contas por mês. Passou do teto, o convite espera na fila.</p></div>
+    <div class="card left fill" style="padding:26px"><h3 style="font-size:30px">Perde tudo de uma vez</h3><p class="sm muted">Se uma banda que você chamou for banida, o direito cai na hora e os convites pendentes são cancelados.</p></div>
+  </div>
+  <div class="notes">Os 60 dias e o teto de 4 são pontos de calibragem, não dogma: se a corrente estagnar, afrouxa; se crescer rápido demais, aperta. O que não muda é o convite ser conquistado e escasso.</div>
+</section>
+
+<!-- 12 REGRA 2 -->
+<section class="g20">
+  <div class="head">
+    <p class="eyebrow">Regra 2 · o coração do app</p>
+    <h2>Quem chama, responde pelo chamado.</h2>
+  </div>
+  <p class="muted" style="font-size:28px; max-width:1400px">Banir uma banda não é um evento isolado: sobe a corrente na hora. Quem chamou perde o direito de chamar já no primeiro caso — sem aviso prévio, sem segunda chance. É o único momento em que dá pra prevenir: o da escolha de quem entra.</p>
+  <div class="row g28 fill">
+    <div class="card top fill"><p style="font-family:var(--display); font-size:52px; color:var(--sangue)">1º banido</p><h3 style="font-size:32px">Perde o convite na hora</h3><p class="sm muted">O direito de convidar cai imediatamente, com o motivo registrado na árvore. Convites ainda não usados são cancelados.</p></div>
+    <div class="card top fill"><p style="font-family:var(--display); font-size:52px; color:var(--sangue)">2º banido</p><h3 style="font-size:32px">A conta entra em revisão</h3><p class="sm muted">Continua publicando os próprios rolês, mas sob análise. Não é azar duas vezes: é padrão.</p></div>
+    <div class="card top fill"><p style="font-family:var(--display); font-size:52px; color:var(--sangue)">3º banido</p><h3 style="font-size:32px">A banda padrinha cai junto</h3><p class="sm muted">Banimento da conta que sustentou o galho. Quem abriu a porta três vezes escolheu o lado.</p></div>
+    <div class="card fill" style="background:var(--sangue)"><p style="font-family:var(--display); font-size:52px; color:var(--tinta)">Poda</p><h3 style="font-size:32px; color:var(--tinta)">Derruba o galho inteiro</h3><p class="sm" style="color:var(--tinta)">A qualquer momento o admin pode remover, num clique, tudo que aquela conta trouxe pra dentro.</p></div>
+  </div>
+  <div class="callout" style="padding:26px">
+    <p class="sm muted"><b>Isso vai gerar treta real entre gente do cenário.</b> É o preço combinado: a regra está escrita no pacto que a banda aceita ao entrar, em português direto, antes de criar a conta. Ninguém é pego de surpresa — e quem decide está no slide seguinte.</p>
+  </div>
+  <div class="notes">A poda é opcional e fica com o admin: nem todo banimento contamina o galho. Mas quando alguém abre a porta pra um grupo hostil, é a única ferramenta que resolve em minutos.</div>
+</section>
+
+<!-- 13 QUEM PUNE -->
+<section class="g20">
+  <div class="head">
+    <p class="eyebrow">Autoridade · como se pune</p>
+    <h2>Ditadura na emergência, júri no resto.</h2>
+  </div>
+  <div class="row g16">
+    <div class="box fill" style="padding:22px; gap:10px"><p class="mono red" style="font-size:24px">01 DENÚNCIA</p><h3 style="font-size:28px">A banda Y descreve</h3><p class="muted" style="font-size:25px; line-height:1.4">O que houve, onde e quando. Denúncia sem caso concreto não anda.</p></div>
+    <div class="box fill" style="padding:22px; gap:10px"><p class="mono red" style="font-size:24px">02 TRIAGEM</p><h3 style="font-size:28px">Veteranas leem</h3><p class="muted" style="font-size:25px; line-height:1.4">Arquivam, banem na hora se for flagrante, ou mandam a júri.</p></div>
+    <div class="box fill" style="padding:22px; gap:10px"><p class="mono red" style="font-size:24px">03 DEFESA</p><h3 style="font-size:28px">A acusada responde</h3><p class="muted" style="font-size:25px; line-height:1.4">Recebe a denúncia inteira e tem prazo pra dar a versão dela.</p></div>
+    <div class="box fill" style="padding:22px; gap:10px"><p class="mono red" style="font-size:24px">04 JÚRI</p><h3 style="font-size:28px">Bandas votam</h3><p class="muted" style="font-size:25px; line-height:1.4">Nada, advertência, perda do convite ou banimento.</p></div>
+    <div class="box acid fill" style="padding:22px; gap:10px"><p class="mono acido" style="font-size:24px">05 REGISTRO</p><h3 style="font-size:28px">Fica escrito</h3><p class="muted" style="font-size:25px; line-height:1.4">Decisão e motivo visíveis para as bandas. Nunca para o público.</p></div>
+  </div>
+  <div class="row g24">
+    <div class="card left fill" style="padding:26px; gap:10px"><h3 style="font-size:30px">O admin continua podendo tudo</h3><p class="sm muted">Bane a qualquer momento, sem processo, e pode derrubar decisão de júri. É o atalho pro caso flagrante e pro erro coletivo — e quanto mais o júri funcionar, menos ele aparece.</p></div>
+    <div class="card left fill" style="padding:26px; gap:10px"><h3 style="font-size:30px">Banir na triagem tem trava</h3><p class="sm muted">O atalho das veteranas exige um mínimo de bandas de acordo e é reversível pelo admin por alguns dias. Sem trava, "banir na hora" vira poder pessoal com outro nome.</p></div>
+    <div class="card left acid fill" style="padding:26px; gap:10px"><h3 style="font-size:30px">Nada disso é público</h3><p class="sm muted">Denúncia, defesa e votação acontecem longe do público. Só a decisão final fica registrada, e só para bandas. O app não organiza linchamento.</p></div>
+  </div>
+  <div class="callout" style="padding:22px">
+    <p class="sm muted">Três instâncias, e quanto mais a decisão desce, mais gente decide e mais devagar: o <b>admin</b> resolve sozinho e na hora; as <b>veteranas</b> filtram; o <b>júri</b> julga o mérito. O desenho do júri está na tela seguinte — e continua em aberto.</p>
+  </div>
+  <div class="notes">A escada da regra 2 (padrinho perde convite no 1º afilhado banido) continua valendo: ela é automática e não passa por júri. O júri decide se houve falta; a consequência em cadeia é mecânica.</div>
+</section>
+
+<!-- 14 O JÚRI EM ABERTO -->
+<section class="bg2 g20">
+  <div class="head">
+    <p class="eyebrow">Em aberto · desenho do júri</p>
+    <h2>Quem julga? Quatro desenhos, nenhum fechado.</h2>
+  </div>
+  <div class="grid2 fill" style="gap:20px">
+    <div class="card left" style="padding:24px; gap:8px">
+      <h3 style="font-size:30px">Quem estava no mesmo rolê</h3>
+      <p class="muted" style="font-size:26px; line-height:1.4">As bandas que tocaram no evento do caso.</p>
+      <p style="font-size:25px; line-height:1.4; color:#C5F82A">A favor: viram acontecer.</p>
+      <p style="font-size:25px; line-height:1.4; color:#E5383B">Contra: são parte, amigas ou rivais — e em rolê pequeno pode não ter ninguém além dos dois envolvidos.</p>
+    </div>
+    <div class="card left" style="padding:24px; gap:8px">
+      <h3 style="font-size:30px">Bandas da mesma região</h3>
+      <p class="muted" style="font-size:26px; line-height:1.4">Todas as contas ativas num raio definido.</p>
+      <p style="font-size:25px; line-height:1.4; color:#C5F82A">A favor: conhecem o espaço, a cena e o histórico de cada um.</p>
+      <p style="font-size:25px; line-height:1.4; color:#E5383B">Contra: é exatamente onde moram as rixas. A panelinha decide.</p>
+    </div>
+    <div class="card left" style="padding:24px; gap:8px">
+      <h3 style="font-size:30px">Sorteio fora da região</h3>
+      <p class="muted" style="font-size:26px; line-height:1.4">Bandas ativas de outra cena, sorteadas por caso.</p>
+      <p style="font-size:25px; line-height:1.4; color:#C5F82A">A favor: não tem rabo preso nenhum.</p>
+      <p style="font-size:25px; line-height:1.4; color:#E5383B">Contra: julga no escuro, sem contexto e sem conhecer os envolvidos.</p>
+    </div>
+    <div class="card left acid" style="padding:24px; gap:8px">
+      <h3 style="font-size:30px">Misto: depõe quem viu, vota quem é de fora</h3>
+      <p class="muted" style="font-size:26px; line-height:1.4">Quem estava no rolê relata; quem vota é sorteado de outra região.</p>
+      <p style="font-size:25px; line-height:1.4; color:#C5F82A">A favor: junta contexto e imparcialidade.</p>
+      <p style="font-size:25px; line-height:1.4; color:#E5383B">Contra: processo mais lento e mais trabalhoso de operar.</p>
+    </div>
+  </div>
+  <div class="callout" style="padding:24px">
+    <p class="sm muted"><b>Também está em aberto:</b> o que define uma banda "veterana" (nível na árvore é só tempo de chegada, não é juízo) · tamanho do júri e quórum · maioria simples ou dois terços · prazo de voto e o que fazer no empate · denúncia assinada ou anônima · se a decisão pode ser revista.</p>
+  </div>
+  <div class="notes">O risco de fundo é o mesmo em todos os desenhos: cenário pequeno, todo mundo se conhece, e júri vira tribunal de rixa. Por isso o admin segue com poder de derrubar decisão — não como ideal, mas como fusível enquanto o processo não prova que funciona.</div>
+</section>
+
+<!-- 15 REGRA 3 -->
+<section class="bg2 g24">
+  <div class="head">
+    <p class="eyebrow">Regra 3 · o contrapeso</p>
+    <h2>Porta fechada vira panelinha. A válvula resolve.</h2>
+  </div>
+  <p class="muted" style="max-width:1440px">Convite fechado é ótimo contra zoeira e péssimo para alcance: a banda de cidade pequena, fora da rede de quem já está dentro, nunca entra. Sem uma segunda porta, o app vira a agenda dos amigos do admin.</p>
+  <div class="row g28 center fill">
+    <div class="box fill" style="padding:28px"><p class="mono dim" style="font-size:26px">QUALQUER PESSOA</p><h3 style="font-size:32px">"Conheço uma banda que devia estar aqui"</h3><p class="sm muted">Botão visível na tela vazia e no rodapé. Sem conta, sem login: nome da banda, cidade, um link e um contato.</p></div>
+    <div class="arrow"></div>
+    <div class="box red fill" style="padding:28px"><p class="mono red" style="font-size:26px">FILA DO ADMIN</p><h3 style="font-size:32px">Você decide, uma a uma</h3><p class="sm muted">A indicação não entra sozinha. Só vira convite quando você manda. O controle continua inteiro na sua mão.</p></div>
+    <div class="arrow"></div>
+    <div class="box acid fill" style="padding:28px"><p class="mono acido" style="font-size:26px">CONVITE ENVIADO</p><h3 style="font-size:32px">Entra pela corrente, com padrinho</h3><p class="sm muted">O padrinho é o admin ou o curador regional que aprovou. A responsabilidade continua valendo igual.</p></div>
+  </div>
+  <div class="callout col g12" style="padding:20px">
+    <h3 style="font-size:32px">Curadoria regional, quando escalar</h3>
+    <p class="muted" style="font-size:29px">Um curador por estado ou por cena recebe poder de convite e de moderação no seu território. É como o app cresce para fora da sua cidade sem perder o critério — e sem depender de você ler tudo.</p>
+  </div>
+  <div class="notes">Essa válvula é o que impede a crítica mais forte ao modelo fechado. Ela custa trabalho de curadoria, mas é o trabalho que você já se dispôs a fazer.</div>
+</section>
+
+<!-- 16 LINE-UP POR CONVITE -->
+<section class="bg2 g20">
+  <div class="head">
+    <p class="eyebrow">Fluxo C · montar o rolê</p>
+    <h2>Chama ou pede pra entrar. Sempre com confirmação.</h2>
+  </div>
+  <div class="row g48">
+    <div class="col fill g12">
+      <div class="row g16">
+        <div class="box red fill" style="padding:24px; gap:10px">
+          <p class="mono red" style="font-size:24px">CONVITE →</p>
+          <h3 style="font-size:28px">A organizadora chama</h3>
+          <p class="muted" style="font-size:25px; line-height:1.4">Escolhe a banda no app e manda o convite. A convidada aceita ou recusa.</p>
+        </div>
+        <div class="box red fill" style="padding:24px; gap:10px">
+          <p class="mono red" style="font-size:24px">← PEDIDO</p>
+          <h3 style="font-size:28px">A banda se oferece</h3>
+          <p class="muted" style="font-size:25px; line-height:1.4">Vê o rolê na agenda e pede pra entrar. A organizadora aceita ou recusa.</p>
+        </div>
+      </div>
+      <div class="card left" style="padding:18px; gap:6px"><h3 style="font-size:29px">Quem organiza tem a palavra final</h3><p class="muted" style="font-size:25px; line-height:1.4">Nos dois sentidos, o line-up só fecha com as duas pontas de acordo. Pedido não aceito simplesmente não aparece — nem para o público, nem como recusa pública.</p></div>
+      <div class="card left" style="padding:18px; gap:6px"><h3 style="font-size:29px">Uma banda organiza e responde</h3><p class="muted" style="font-size:25px; line-height:1.4">É ela que publica, edita, adia e cancela. Se der problema, sabe-se com quem falar.</p></div>
+      <div class="card left" style="padding:18px; gap:6px"><h3 style="font-size:29px">Banda de fora entra como texto</h3><p class="muted" style="font-size:25px; line-height:1.4">Sem conta e sem convite de entrada: o line-up não pode virar porta dos fundos da corrente. Produção é crédito em texto, também sem conta.</p></div>
+    </div>
+    <div class="col" style="width:540px; flex:none; gap:10px">
+      <p class="mono dim" style="padding:2px">LINE-UP · NOITE DE CRUST</p>
+      <div class="ev now" style="padding:18px; gap:6px"><div class="row between"><p class="mono acido">ORGANIZA</p><p class="mono dim">publicou</p></div><h4>WARCRUSHER</h4></div>
+      <div class="ev now" style="padding:18px; gap:6px"><div class="row between"><p class="mono acido">CONFIRMADO</p><p class="mono dim">aceitou o convite</p></div><h4>FOSSA</h4></div>
+      <div class="ev" style="padding:18px; gap:6px"><div class="row between"><p class="mono dim">PENDENTE</p><p class="mono dim">convidada</p></div><h4 style="color:var(--dim)">CLOACA</h4></div>
+      <div class="ev dead" style="padding:18px; gap:6px"><div class="row between"><p class="mono red">PEDIU PRA ENTRAR</p><p class="mono dim">aguarda</p></div><h4 style="color:var(--dim)">CARNIÇA</h4></div>
+      <div class="ev" style="padding:18px; gap:6px"><p class="mono dim">CONVIDADA DE FORA</p><h4 style="color:var(--dim)">BILE (Curitiba)</h4><p class="dim">Sem conta · consta só no cartaz</p></div>
+    </div>
+  </div>
+  <div class="notes">O pedido resolve o caso real da banda em turnê: ela vê que tem rolê na cidade onde vai estar naquela data e se oferece, em vez de depender de conhecer alguém. E o line-up continua sendo informação verificada, não texto digitado por quem publica.</div>
+</section>
+
+<!-- 17 COMENTÁRIOS SOBRE LOCAIS -->
+<section class="g20">
+  <div class="head">
+    <p class="eyebrow">Só entre bandas · fechado ao público</p>
+    <h2>O que a banda precisa saber antes de aceitar o rolê</h2>
+  </div>
+  <div class="row g56">
+    <div class="col fill g20">
+      <p class="sm muted">Espaço não tem conta no PORÃO. Em compensação, quem tocou lá conta como foi — e essa conversa fica trancada entre contas de banda. É o que separa o lugar que paga o combinado do lugar que enrola.</p>
+      <div class="row g20">
+        <div class="card left fill" style="padding:24px"><h3 style="font-size:28px">Combinado cumprido</h3><p class="sm muted">Pagou o que prometeu? A divisão saiu como acertado?</p></div>
+        <div class="card left fill" style="padding:24px"><h3 style="font-size:28px">Estrutura e som</h3><p class="sm muted">PA, palco, camarim, o que você precisa levar por conta.</p></div>
+      </div>
+      <div class="row g20">
+        <div class="card left fill" style="padding:24px"><h3 style="font-size:28px">Segurança e postura</h3><p class="sm muted">Como o espaço trata público, mulheres e quem trabalha ali.</p></div>
+        <div class="card left fill" style="padding:24px"><h3 style="font-size:28px">Relato livre</h3><p class="sm muted">O resto: público, horário, vizinhança, polícia, o que for.</p></div>
+      </div>
+    </div>
+    <div class="col" style="width:600px; flex:none; gap:16px">
+      <p class="mono acido" style="padding:4px">VISÍVEL SÓ PARA CONTAS DE BANDA</p>
+      <div class="card" style="padding:22px; gap:8px">
+        <div class="row between"><p class="mono red">WARCRUSHER</p><p class="mono dim">mar/2026</p></div>
+        <p class="sm muted">Combinado cumprido · Som sucateado · Postura ok</p>
+        <p class="sm">"Pagaram na hora, sem choro. O PA é um caco: leve seu cabo e seu microfone."</p>
+      </div>
+      <div class="card" style="padding:22px; gap:8px">
+        <div class="row between"><p class="mono red">CARNIÇA</p><p class="mono dim">jan/2026</p></div>
+        <p class="sm muted">Combinado quebrado · Segurança ruim</p>
+        <p class="sm">"Cortaram a porcentagem no fim da noite, com taxa que ninguém combinou. Segurança agrediu um moleque na saída."</p>
+      </div>
+      <p class="dim sm">Assinado pela banda autora. Qualquer banda cadastrada pode escrever.</p>
+    </div>
+  </div>
+  <div class="notes">Risco assumido: como o espaço não tem conta, ele não responde dentro do app. A assinatura obrigatória é o que segura o abuso — quem escreve põe o nome da própria banda. O admin pode remover, e o espaço precisa de um canal externo para contestar. Isso está na lista de decisões em aberto.</div>
+</section>
+
+<!-- 18 ENDEREÇO + ALERTA -->
+<section class="g40">
+  <div class="head">
+    <p class="eyebrow">Recurso · endereço e aviso</p>
+    <h2>O endereço aparece na hora certa.</h2>
+  </div>
+  <div class="row g56 fill">
+    <div class="col fill g24">
+      <div class="card row g28" style="padding:30px">
+        <p class="mono dim" style="font-size:26px; width:180px; flex:none">PUBLICAÇÃO</p>
+        <div class="col fill" style="gap:8px"><h3 style="font-size:32px">Local visível, endereço opcional</h3><p class="sm muted">Quem organiza escolhe: mostrar o endereço já, ou marcar um horário de liberação. O campo é opcional — o caso comum continua de um toque.</p></div>
+      </div>
+      <div class="card row g28" style="padding:30px">
+        <p class="mono dim" style="font-size:26px; width:180px; flex:none">ANTES</p>
+        <div class="col fill" style="gap:8px"><h3 style="font-size:32px">O card avisa que falta o endereço</h3><p class="sm muted">Aparece bairro e ponto de referência, com o aviso "endereço liberado no dia". Ninguém fica sem saber que a informação existe.</p></div>
+      </div>
+      <div class="card left acid row g28" style="padding:30px">
+        <p class="mono acido" style="font-size:26px; width:180px; flex:none">10:00</p>
+        <div class="col fill" style="gap:8px"><h3 style="font-size:32px">No dia, o alerta dispara</h3><p class="sm muted">Às 10h da manhã do dia marcado, quem salvou o rolê recebe o aviso com o endereço completo. Dá tempo de organizar carona, grana e transporte.</p></div>
+      </div>
+    </div>
+    <div class="col g24" style="width:620px; flex:none">
+      <div class="notif">
+        <div class="row between"><p class="mono red">PORÃO</p><p class="mono dim">agora</p></div>
+        <h3>Hoje: NOITE DE CRUST, 21:00</h3>
+        <p class="sm muted" style="font-size:26px">Endereço liberado: Bar do Zé, R. das Flores, 120 — Centro. 2,4 km de você.</p>
+      </div>
+      <div class="notif alerta">
+        <div class="row between"><p class="mono red">PORÃO</p><p class="mono dim">14:20</p></div>
+        <h3 style="color:var(--sangue)">CANCELADO: Tributo Sarcófago</h3>
+        <p class="sm muted" style="font-size:26px">O rolê de hoje na Casa Rubro foi cancelado pela organização.</p>
+      </div>
+      <p class="dim sm">Só quem salvou o rolê recebe. A inscrição é por evento, anônima, e não exige conta.</p>
+    </div>
+  </div>
+  <div class="notes">Versão 1 fica no essencial: horário de liberação opcional + alerta às 10h. Níveis mais finos de sigilo (só ponto de encontro, endereço nunca no app) entram depois, se a prática pedir.</div>
+</section>
+
+<!-- 19 CANCELAMENTO -->
+<section class="statement between g48">
+  <p class="eyebrow">O argumento que convence banda a cadastrar</p>
+  <h2 class="big" style="font-size:104px; color:var(--tinta); max-width:1560px">Divulgação o Instagram já faz. Avisar que caiu, não.</h2>
+  <div class="row g32">
+    <div class="panel fill"><h3>CANCELOU</h3><p style="font-size:28px">O card fica na agenda, marcado, com a hora do aviso. Quem salvou recebe alerta na hora.</p></div>
+    <div class="panel fill"><h3>ADIOU</h3><p style="font-size:28px">Nova data entra no lugar, o histórico fica visível, e o alerta sai com a mudança.</p></div>
+    <div class="panel fill"><h3>MUDOU DE LOCAL</h3><p style="font-size:28px">Endereço novo, mapa atualizado, aviso disparado. Ninguém chega na porta errada.</p></div>
+  </div>
+  <p class="lg" style="color:var(--tinta); max-width:1560px">Três ações a um toque na conta do organizador. Nada é apagado: alteração vira aviso visível, e o rolê cancelado continua na lista até a data passar.</p>
+  <div class="notes">Este é o slide para mostrar a uma banda cética. O ganho não é "mais divulgação" — é não fazer o público viajar 30 km à toa, e não ter que responder 40 directs perguntando se o show caiu.</div>
+</section>
+
+<!-- 20 ARQUITETURA -->
+<section class="bg2 g20">
+  <div class="row between end">
+    <div class="head"><p class="eyebrow">Construção</p><h2>Tudo livre, custo perto de zero</h2></div>
+    <p class="mono dim" style="letter-spacing:2px">PROPOSTA INICIAL</p>
+  </div>
+  <table>
+    <thead><tr><th style="width:20%">Camada</th><th style="width:30%">Escolha</th><th style="width:50%">Por quê</th></tr></thead>
+    <tbody>
+      <tr><td class="k">Web</td><td class="k">PWA instalável</td><td>Um produto pra validar. Funciona no desktop, no celular e instala sem loja.</td></tr>
+      <tr><td class="k">Android</td><td class="k">App nativo com MapLibre</td><td>Notificação confiável e mapa fluido — as duas coisas que a web entrega pior.</td></tr>
+      <tr><td class="k">Mapa</td><td class="k">MapLibre + tiles OSM estáticos</td><td>Arquivo único servido de storage barato. Sem chave de API, sem cobrança por uso.</td></tr>
+      <tr><td class="k">Busca por raio</td><td class="k">PostgreSQL + PostGIS</td><td>Consulta "o que tem em 50 km" é uma linha de SQL com índice geográfico.</td></tr>
+      <tr><td class="k">Contas</td><td class="k">Link mágico por e-mail</td><td>Sem senha. Combina com o convite, que já é nominal e por e-mail.</td></tr>
+      <tr><td class="k">Regra de convite</td><td class="k">No servidor, transacional</td><td>Cota, quarentena, árvore e poda não podem morar no app — só no banco.</td></tr>
+      <tr><td class="k">Alertas</td><td class="k">Código do aparelho + id do evento</td><td>Quem salvou recebe. Sem e-mail, sem login, e o registro é apagado depois da data.</td></tr>
+      <tr><td class="k">Comentários de local</td><td class="k">Isolados por regra no banco</td><td>Só conta de banda logada lê. Não existe rota pública que devolva esse conteúdo.</td></tr>
+    </tbody>
+  </table>
+  <p class="dim" style="font-size:26px">Custo fixo mensal previsto: domínio, e-mail transacional e storage dos tiles. Nada que exija investidor, mensalidade de banda ou publicidade.</p>
+  <div class="notes">Nada aqui é irreversível. O ponto inegociável é o dado ser nosso e o mapa não depender de fornecedor que cobre por requisição quando o app crescer.</div>
+</section>
+
+<!-- 21 ROADMAP -->
+<section class="g28">
+  <div class="head">
+    <p class="eyebrow">Lançamento</p>
+    <h2>Uma cidade. Vinte bandas. Na mão.</h2>
+  </div>
+  <p class="muted" style="font-size:32px; max-width:1560px">Um app de agenda com três eventos cadastrados está morto na chegada. A primeira versão nasce numa cena só — a sua — com as bandas convidadas uma a uma, e só abre depois que a agenda já tem o que mostrar.</p>
+  <div class="row g28 fill">
+    <div class="card top fill"><p class="mono red" style="font-size:26px">FASE 0 · PAPEL</p><h3>Fechar o conceito</h3><p class="sm muted">Este documento, o termo de uso e a lista das primeiras bandas que você vai chamar.</p></div>
+    <div class="card top fill"><p class="mono red" style="font-size:26px">FASE 1 · WEB</p><h3>Agenda + mapa + publicação</h3><p class="sm muted">Só o fluxo do público e o de publicar. Convites gerados por você, na mão, direto no banco.</p></div>
+    <div class="card top fill"><p class="mono red" style="font-size:26px">FASE 2 · CORRENTE</p><h3>Convite, cota e poda</h3><p class="sm muted">A corrente automatizada, a árvore visível, as sanções e a fila de indicação pública.</p></div>
+    <div class="card top acid fill"><p class="mono acido" style="font-size:26px">FASE 3 · APP</p><h3>Android, alerta e offline</h3><p class="sm muted">Alerta das 10h, agenda do dia offline e mapa nativo. Só depois: outras cenas e curadoria regional.</p></div>
+  </div>
+  <div class="callout">
+    <p class="muted">O critério pra abrir a fase seguinte não é prazo: é <b>ter rolê publicado toda semana, pelas próprias bandas, sem você lembrar ninguém disso</b>.</p>
+  </div>
+  <div class="notes">Se a fase 1 não segurar a agenda semanal da sua cidade, a fase 2 só espalha o problema. O teste é comportamental, não técnico.</div>
+</section>
+
+<!-- 22 DECISÕES -->
+<section class="bg2 g20">
+  <div class="head">
+    <p class="eyebrow">Em aberto</p>
+    <h2>O que falta decidir</h2>
+  </div>
+  <div class="grid2 fill" style="gap:12px">
+    <div class="box" style="border:0; border-left:5px solid var(--sangue); padding:20px; gap:6px"><h3 style="font-size:30px">Cidade e raio de estreia</h3><p class="sm muted" style="font-size:26px">Define o raio padrão, a lista das primeiras bandas e o texto das telas vazias.</p></div>
+    <div class="box" style="border:0; border-left:5px solid var(--sangue); padding:20px; gap:6px"><h3 style="font-size:30px">Quem é "veterana"</h3><p class="sm muted" style="font-size:26px">A triagem depende disso, e nível na árvore é só tempo de chegada. Tempo de casa? Rolês realizados? Eleição pelas bandas da região?</p></div>
+    <div class="box" style="border:0; border-left:5px solid var(--sangue); padding:20px; gap:6px"><h3 style="font-size:30px">O texto do pacto</h3><p class="sm muted" style="font-size:26px">O termo que a pessoa aceita ao entrar. É ele que sustenta cada banimento — precisa ser curto e sem juridiquês.</p></div>
+    <div class="box" style="border:0; border-left:5px solid var(--sangue); padding:20px; gap:6px"><h3 style="font-size:30px">Fronteira do escopo</h3><p class="sm muted" style="font-size:26px">Só show, ou também bazar, feira de vinil, sarau e benefit? Define o filtro de gênero e o tom do app.</p></div>
+    <div class="box" style="border:0; border-left:5px solid var(--sangue); padding:20px; gap:6px"><h3 style="font-size:30px">Espaço citado não responde</h3><p class="sm muted" style="font-size:26px">O local não tem conta, então não tem direito de resposta dentro do app. Falta definir o canal por onde ele contesta um comentário.</p></div>
+    <div class="box" style="border:0; border-left:5px solid var(--sangue); padding:20px; gap:6px"><h3 style="font-size:30px">Banda muda de formação</h3><p class="sm muted" style="font-size:26px">A conta é da banda, mas o e-mail é de uma pessoa. Quem responde quando essa pessoa sai do grupo?</p></div>
+    <div class="box" style="border:0; border-left:5px solid var(--sangue); padding:20px; gap:6px"><h3 style="font-size:30px">Dados pessoais e LGPD</h3><p class="sm muted" style="font-size:26px">E-mail de quem publica é dado pessoal. Guardar o mínimo, dizer o que guarda, apagar quando pedirem.</p></div>
+  </div>
+  <p class="mono dim">PORÃO · DOCUMENTO DE CONCEPÇÃO · V0</p>
+  <div class="notes">Nenhuma dessas trava o início da fase 1, mas todas travam a fase 2. A do pacto é a mais urgente, porque ela define o que o app promete a quem entra.</div>
+</section>
+
+</div>
+</div>
+
+<div id="hud">
+  <span id="hudnav"><button data-dir="-1">‹ ANT</button><button data-dir="1">PRÓX ›</button></span>
+  <span id="marca">PORÃO · concepção v0</span>
+  <span id="keys">← → navegar · <b>N</b> notas · <b>F</b> tela cheia · <b>Ctrl+P</b> imprimir</span>
+  <span id="tip">arraste para o lado · <b>gire o celular</b> para ver maior</span>
+  <span><b id="cur">1</b> / <span id="tot">17</span></span>
+</div>
+
+<script>
+(function(){
+  var deck   = document.getElementById('deck');
+  var stage  = document.getElementById('stage');
+  var slides = Array.prototype.slice.call(deck.querySelectorAll('section'));
+  var i = 0, fluido = null;
+  var temZoom = window.CSS && CSS.supports && CSS.supports('zoom', '1');
+  var CANVAS_FLUIDO = 760;
+
+  document.getElementById('tot').textContent = slides.length;
+
+  /* ---- marca as linhas que devem virar coluna no modo fluido ---- */
+  var BLOCOS = ':scope > .box, :scope > .card, :scope > .col, :scope > .phone';
+  function marcar(el){
+    try { if (el.querySelectorAll(BLOCOS).length >= 2) el.classList.add('stackable'); } catch(e){}
+  }
+  Array.prototype.forEach.call(deck.querySelectorAll('.row'), marcar);
+  slides.forEach(function(s){ if (s.classList.contains('row')) marcar(s); });
+
+  /* ---- tipografia: encolhe só o que é grande demais para 760px ---- */
+  var grandes = Array.prototype.filter.call(
+    deck.querySelectorAll('[style*="font-size"]'),
+    function(el){ return parseFloat(el.style.fontSize) > 34; }
+  );
+  grandes.forEach(function(el){ el.dataset.fs = el.style.fontSize; });
+  function tipografia(on){
+    grandes.forEach(function(el){
+      el.style.fontSize = on ? Math.round(parseFloat(el.dataset.fs) * 0.62) + 'px' : el.dataset.fs;
+    });
+  }
+
+  /* ---- escolhe o modo e aplica a escala ---- */
+  function ajustar(){
+    var w = window.innerWidth, h = window.innerHeight;
+    var escala = Math.min(w / 1920, h / 1080);
+    var quer = (w < 900) || (escala < 0.40);
+
+    if (quer !== fluido){
+      fluido = quer;
+      document.body.classList.toggle('fluid', fluido);
+      tipografia(fluido);
+    }
+
+    if (fluido){
+      // limita também pela altura: em tela baixa e larga, tipo grande demais só faz rolar
+      var z = Math.min(w / CANVAS_FLUIDO, 1, h / 620);
+      deck.style.transform = 'none';
+      if (temZoom){
+        deck.style.zoom = z;
+        stage.style.height = '';
+      } else {
+        deck.style.zoom = '';
+        deck.style.transform = 'scale(' + z + ')';
+        deck.style.transformOrigin = 'top left';
+        stage.style.height = Math.ceil(deck.offsetHeight * z) + 'px';
+      }
+    } else {
+      deck.style.zoom = '';
+      stage.style.height = '';
+      deck.style.transformOrigin = 'center center';
+      deck.style.transform = 'translate(-50%,-50%) scale(' + escala + ')';
+    }
+  }
+
+  function show(n){
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach(function(s, k){ s.classList.toggle('is-active', k === i); });
+    document.getElementById('cur').textContent = i + 1;
+    document.getElementById('bar').style.width = ((i + 1) / slides.length * 100) + '%';
+    location.hash = i + 1;
+    if (fluido){
+      window.scrollTo(0, 0);
+      ajustar();           // a altura muda de slide para slide
+    }
+  }
+  function mover(d){ show(i + d); }
+
+  window.addEventListener('resize', ajustar);
+  window.addEventListener('orientationchange', ajustar);
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { mover(1); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { mover(-1); e.preventDefault(); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1);
+    else if (e.key === 'n' || e.key === 'N') document.body.classList.toggle('notes-on');
+    else if (e.key === 'f' || e.key === 'F') {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else document.documentElement.requestFullscreen();
+    }
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll('.nav, #hudnav button'), function(el){
+    el.addEventListener('click', function(){ mover(parseInt(el.dataset.dir, 10)); });
+  });
+
+  /* ---- swipe horizontal, sem atrapalhar a rolagem vertical ---- */
+  var x0 = null, y0 = null;
+  document.addEventListener('touchstart', function(e){
+    x0 = e.changedTouches[0].clientX; y0 = e.changedTouches[0].clientY;
+  }, {passive:true});
+  document.addEventListener('touchend', function(e){
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    var dy = e.changedTouches[0].clientY - y0;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) mover(dx < 0 ? 1 : -1);
+    x0 = y0 = null;
+  }, {passive:true});
+
+  ajustar();
+  var inicio = parseInt((location.hash || '').replace('#', ''), 10);
+  show(isNaN(inicio) ? 0 : inicio - 1);
+})();
+</script>
+</body>
+</html>

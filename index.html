@@ -343,7 +343,7 @@
   .step p { color: var(--muted); font-size: .92em; }
 
   /* timeline */
-  .timeline { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; margin-top: 1.2em; }
+  .timeline { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0; margin-top: 1.2em; }
   .tl { border-top: 3px solid var(--line); padding: 1em 1em 0 0; position: relative; }
   .tl::before {
     content: ""; position: absolute; top: -9px; left: 0;
@@ -353,6 +353,19 @@
   .tl.now::before { border-color: var(--accent); background: var(--accent); }
   .tl b { display: block; margin-bottom: .25em; }
   .tl p { color: var(--muted); font-size: .88em; }
+
+  /* expansão */
+  .phases { display: grid; grid-template-columns: 1.15fr 1fr 1fr; gap: 16px; margin-top: 1.2em; }
+  .phase { position: relative; }
+  .phase.beta { border: 2px solid var(--accent); }
+  .phase .badge {
+    position: absolute; top: -.8em; right: 1em;
+    background: var(--accent); color: var(--bg); font-family: var(--mono); font-weight: 700;
+    font-size: .72em; padding: .2em .6em; border-radius: 4px; letter-spacing: .08em;
+  }
+  .phase h3 { font-size: 1.25em; }
+  .phase.beta h3 { font-size: 1.5em; }
+  .tl.goal b { color: var(--accent); }
 
   .ask .card { border-top: 3px solid var(--accent); }
   .ask .card h3 { font-size: 1.15em; }
@@ -400,13 +413,13 @@
   .nav .counter { min-width: 4.5em; text-align: center; }
 
   /* ---------- responsivo ---------- */
-  .two > *, .grid-2 > *, .grid-3 > *, .grid-4 > *, .steps > * { min-width: 0; }
+  .two > *, .grid-2 > *, .grid-3 > *, .grid-4 > *, .steps > *, .phases > * { min-width: 0; }
   .slide { overflow-x: hidden; }
   @media (max-width: 900px) {
     .slide { justify-content: flex-start; }
     h1 { font-size: clamp(2em, 10vw, 3.4em); }
     h2 { font-size: clamp(1.5em, 7.5vw, 2.4em); overflow-wrap: break-word; }
-    .two, .grid-3, .grid-4, .steps { grid-template-columns: minmax(0, 1fr); }
+    .two, .grid-3, .grid-4, .steps, .phases { grid-template-columns: minmax(0, 1fr); }
     .grid-2 { grid-template-columns: 1fr; }
     .flyers { grid-template-columns: 1fr 1fr 1fr; gap: 10px; font-size: .62em; }
     .timeline { grid-template-columns: 1fr; }
@@ -438,7 +451,7 @@
   <!-- 1. Capa -->
   <section class="slide cover" data-title="Capa">
     <div class="inner">
-      <div class="kicker">Proposta pra cena · Rio de Janeiro e São Paulo</div>
+      <div class="kicker">Proposta pra cena · Beta no RJ e em SP, de olho no Brasil inteiro</div>
       <h1>A agenda da cena<br><span class="tape">rock underground</span></h1>
       <p class="lead">Uma ferramenta pra <strong>gente se organizar</strong>: marcar data sem atropelar ninguém, divulgar com informação certa e fazer o público achar o rolê.</p>
       <div class="name-tbd">Nome: <b>em aberto</b>, quem escolhe são vocês</div>
@@ -699,8 +712,22 @@
       <div class="grid-3">
         <div class="card"><span class="num">GRATUITO</span><h3>Pra banda e pro público</h3><p>Sem taxa pra publicar e sem anúncio empurrado no meio da agenda. Manter no ar custa ~R$ 40 por ano.</p></div>
         <div class="card"><span class="num">SEM ALGORITMO</span><h3>Distância e data</h3><p>Ninguém paga pra aparecer primeiro. O rolê mais perto aparece primeiro.</p></div>
-        <div class="card"><span class="num">CÓDIGO ABERTO</span><h3>Pra outras cenas também</h3><p>Primeiro a gente organiza o rock no RJ e em SP. O código fica aberto pra outros movimentos e cidades montarem a agenda deles.</p></div>
+        <div class="card"><span class="num">CÓDIGO ABERTO</span><h3>Pra outras cenas também</h3><p>RJ e SP testam primeiro, e o plano é levar pro Brasil inteiro. O código fica aberto pra outros movimentos montarem a agenda deles também.</p></div>
       </div>
+    </div>
+  </section>
+
+  <!-- Expansão -->
+  <section class="slide" data-title="Expansão">
+    <div class="inner">
+      <div class="kicker">Expansão</div>
+      <h2>Começa no RJ e em SP.<br><span class="accent">O plano é organizar o Brasil inteiro.</span></h2>
+      <div class="phases">
+        <div class="card phase beta"><span class="badge">BETA</span><span class="num">FASE 1</span><h3>Rio e São Paulo</h3><p>As duas maiores cenas são as beta testers. Bandas, coletivos e espaços parceiros usam desde o primeiro dia, apontam o que tá ruim e ajudam a acertar a ferramenta.</p></div>
+        <div class="card phase"><span class="num">FASE 2</span><h3>Outras capitais</h3><p>Com o modelo validado, a agenda abre pra novas cidades, puxada por coletivos locais que queiram cuidar da cena da sua região.</p></div>
+        <div class="card phase"><span class="num">FASE 3</span><h3>Brasil inteiro</h3><p>Uma agenda só pra cena do país: cada região organiza a sua, e dá pra enxergar o que rola nas outras cidades na hora de planejar uma turnê.</p></div>
+      </div>
+      <p class="muted" style="margin-top:1.4em">Por que começar por RJ e SP? É onde tem mais rolê por semana e mais choque de data. <b style="color:var(--text)">Se funcionar lá, funciona em qualquer lugar.</b></p>
     </div>
   </section>
 
@@ -729,7 +756,7 @@
       <h2>A gente não quer fazer isso sozinho</h2>
       <div class="grid-4">
         <div class="card"><h3>Contar as dores</h3><p>Qual desses problemas mais pega pra vocês? O que ficou de fora?</p></div>
-        <div class="card"><h3>Ser parceiro piloto</h3><p>Usar desde o começo, publicar os rolês e falar o que tá ruim.</p></div>
+        <div class="card"><h3>Ser beta tester</h3><p>No RJ e em SP: usar desde o começo, publicar os rolês e falar o que tá ruim, antes de levar pro resto do Brasil.</p></div>
         <div class="card"><h3>Escolher o nome</h3><p>O nome e a cara do projeto vão sair de vocês, não da gente.</p></div>
         <div class="card"><h3>Ajudar a cuidar</h3><p>Coletivos e pessoas da cena que topem aprovar perfis e olhar as denúncias.</p></div>
       </div>
@@ -740,13 +767,14 @@
   <section class="slide" data-title="Próximos passos">
     <div class="inner">
       <div class="kicker">Próximos passos</div>
-      <h2>O caminho até o primeiro rolê na agenda</h2>
+      <h2>Do beta no RJ e em SP<br><span class="accent">ao Brasil inteiro</span></h2>
       <div class="timeline">
         <div class="tl now"><b>Conversas</b><p>Ouvir bandas, coletivos e espaços do RJ e de SP. É aqui que a gente tá.</p></div>
         <div class="tl"><b>Nome e cara</b><p>Escolha do nome junto com os artistas parceiros.</p></div>
         <div class="tl"><b>Telas</b><p>Desenhar as telas e validar com quem vai usar.</p></div>
         <div class="tl"><b>Primeira versão</b><p>Calendário, aviso de conflito, página do evento e busca por km.</p></div>
-        <div class="tl"><b>Lançamento no RJ e em SP</b><p>A agenda começa já cheia, com os rolês dos parceiros.</p></div>
+        <div class="tl"><b>Beta no RJ e em SP</b><p>A agenda começa já cheia, com os rolês dos parceiros testando tudo.</p></div>
+        <div class="tl goal"><b>Brasil inteiro</b><p>Abrir cidade por cidade, com coletivos locais cuidando de cada região.</p></div>
       </div>
     </div>
   </section>

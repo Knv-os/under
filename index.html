@@ -373,6 +373,30 @@
   }
   .proto-link:hover { filter: brightness(1.08); }
 
+  /* protótipo ao vivo */
+  .phone-live { width: min(340px, 100%); padding: 14px 8px 8px; }
+  .phone-live .notch { margin-bottom: 10px; }
+  .phone-live iframe {
+    display: block; width: 100%; height: min(620px, 68vh); border: 0;
+    border-radius: 26px; background: var(--bg);
+  }
+  .tour { display: grid; gap: 8px; margin: 1.2em 0 1.4em; }
+  .tour button {
+    text-align: left; cursor: pointer; font: inherit; color: var(--text);
+    background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--line);
+    border-radius: 10px; padding: .6em .9em;
+  }
+  .tour button:hover { border-color: var(--muted); }
+  .tour button.on { border-color: var(--accent); background: var(--accent-soft); }
+  .tour button b { display: block; font-size: .95em; }
+  .tour button span { color: var(--muted); font-size: .85em; }
+  .proto-open { display: flex; align-items: center; gap: 1em; }
+  .qr { flex: none; background: #fff; padding: 8px; border-radius: 8px; line-height: 0; }
+  .qr:empty { display: none; }
+  .qr img, .qr canvas { width: 96px; height: 96px; }
+  .proto-url { display: block; font-family: var(--mono); font-weight: 700; color: var(--text); text-decoration: none; overflow-wrap: anywhere; }
+  .proto-url:hover { color: var(--accent); }
+
   .ask .card { border-top: 3px solid var(--accent); }
   .ask .card h3 { font-size: 1.15em; }
 
@@ -680,6 +704,33 @@
     </div>
   </section>
 
+  <!-- Protótipo ao vivo -->
+  <section class="slide" data-title="Protótipo" id="slide-proto">
+    <div class="inner two">
+      <div>
+        <div class="kicker">Já dá pra mexer</div>
+        <h2>O protótipo<br><span class="accent">tá no ar</span></h2>
+        <p class="lead">A visão de quem vai no rolê, funcionando. Os dados são de exemplo, mas <strong>o jeito de usar é esse</strong>.</p>
+        <div class="tour" id="tour">
+          <button data-tela="lista" class="on"><b>Lista + mapa</b><span>Os rolês da semana por data e distância, com os pinos no mapa.</span></button>
+          <button data-tela="evento-2"><b>Local alterado</b><span>Quem abre o evento vê o aviso em destaque, sem depender de post novo.</span></button>
+          <button data-tela="evento-3"><b>Página do evento</b><span>Endereço, preço, line-up e “como chegar” num toque.</span></button>
+        </div>
+        <div class="proto-open">
+          <div class="qr" id="qr" aria-hidden="true"></div>
+          <div>
+            <span class="small muted">Abre no celular:</span>
+            <a class="proto-url" href="https://knv-os.github.io/under/prototipo.html" target="_blank" rel="noopener">knv-os.github.io/under/prototipo.html</a>
+          </div>
+        </div>
+      </div>
+      <div class="phone phone-live">
+        <div class="notch"></div>
+        <iframe id="proto-frame" title="Protótipo da agenda, navegável"></iframe>
+      </div>
+    </div>
+  </section>
+
   <!-- 10. Como funciona -->
   <section class="slide" data-title="Como funciona">
     <div class="inner">
@@ -796,6 +847,7 @@
         <li>Vocês usariam pra divulgar os rolês de vocês?</li>
         <li>Que nome vocês dariam pra isso?</li>
       </ul>
+      <p class="note">Protótipo: <a class="proto-url" style="display:inline" href="https://knv-os.github.io/under/prototipo.html" target="_blank" rel="noopener">knv-os.github.io/under/prototipo.html</a></p>
     </div>
   </section>
 
@@ -811,6 +863,7 @@
   </div>
 </nav>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
   // ---------- calendário de exemplo (outubro/2026 começa numa quinta) ----------
   (function buildCalendar() {
@@ -829,6 +882,42 @@
     }
   })();
 
+  // ---------- protótipo ao vivo ----------
+  const protoSlide = document.getElementById('slide-proto');
+  const protoFrame = document.getElementById('proto-frame');
+  const tour = document.getElementById('tour');
+  let protoTela = null;
+
+  // só carrega o iframe quando o slide abre, pra não puxar o mapa à toa
+  function loadProto(tela) {
+    if (tela === protoTela) return;
+    protoTela = tela;
+    // a query muda a URL e força recarregar; o protótipo lê o #evento-N ao abrir
+    protoFrame.src = tela === 'lista' ? 'prototipo.html' : `prototipo.html?tela=${tela}#${tela}`;
+    tour.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.tela === tela));
+  }
+  tour.addEventListener('click', e => {
+    const b = e.target.closest('[data-tela]');
+    if (b) loadProto(b.dataset.tela);
+  });
+
+  // setas continuam passando slide mesmo com o foco dentro do protótipo
+  protoFrame.addEventListener('load', () => {
+    try {
+      protoFrame.contentDocument.addEventListener('keydown', e => {
+        if (['ArrowRight', 'PageDown'].includes(e.key)) { e.preventDefault(); window.focus(); show(current + 1); }
+        else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); window.focus(); show(current - 1); }
+      });
+    } catch (e) {} // aberto via file:// o iframe fica isolado
+  });
+
+  try {
+    new QRCode(document.getElementById('qr'), {
+      text: 'https://knv-os.github.io/under/prototipo.html',
+      width: 192, height: 192, colorDark: '#0c0b0a', colorLight: '#ffffff',
+    });
+  } catch (e) {} // sem o QR, o link escrito continua ali
+
   // ---------- navegação ----------
   const slides = [...document.querySelectorAll('.slide')];
   const counter = document.getElementById('counter');
@@ -845,6 +934,7 @@
     progress.style.width = `${((current + 1) / slides.length) * 100}%`;
     prevBtn.disabled = current === 0;
     nextBtn.disabled = current === slides.length - 1;
+    if (slides[current] === protoSlide && !protoTela) loadProto('lista');
     try { history.replaceState(null, '', `#${current + 1}`); } catch (e) {}
   }
 

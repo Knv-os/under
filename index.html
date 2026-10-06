@@ -136,6 +136,11 @@
     transform: rotate(-1.5deg);
   }
   .cover .lead { margin-top: 1.2em; }
+  .cover-tool {
+    margin-top: .9em; font-family: var(--display); text-transform: uppercase;
+    font-size: clamp(1.3em, 2.6vw, 2.1em); line-height: 1.1;
+  }
+  .cover .cover-tool + .lead { margin-top: .5em; }
   .name-tbd {
     display: inline-flex; align-items: center; gap: .6em;
     margin-top: 2em;
@@ -377,7 +382,7 @@
   .phone-live { width: min(340px, 100%); padding: 14px 8px 8px; }
   .phone-live .notch { margin-bottom: 10px; }
   .phone-live iframe {
-    display: block; width: 100%; height: min(620px, 68vh); border: 0;
+    display: block; width: 100%; height: min(600px, 64vh); border: 0;
     border-radius: 26px; background: var(--bg);
   }
   .tour { display: grid; gap: 8px; margin: 1.2em 0 1.4em; }
@@ -390,6 +395,26 @@
   .tour button.on { border-color: var(--accent); background: var(--accent-soft); }
   .tour button b { display: block; font-size: .95em; }
   .tour button span { color: var(--muted); font-size: .85em; }
+  .tour.row4 { grid-template-columns: repeat(4, minmax(0, 1fr)); margin: .4em 0 1em; }
+  .tour.row4 button { padding: .5em .8em; }
+  .tour.row4 button span { font-size: .78em; display: block; line-height: 1.35; }
+  .band-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1em 2em; align-items: end; }
+  .band-head h2 { margin-bottom: .25em; }
+  /* notebook: o protótipo roda no tamanho de computador e é reduzido pra caber */
+  .laptop { margin: 0 auto; }
+  .laptop .lscreen {
+    position: relative; overflow: hidden; background: var(--bg);
+    border: 10px solid #26221e; border-bottom-width: 12px; border-radius: 14px 14px 4px 4px;
+    box-shadow: 0 30px 60px rgba(0,0,0,.6); margin: 0 auto;
+  }
+  .laptop .lscreen iframe { position: absolute; top: 0; left: 0; border: 0; transform-origin: 0 0; background: var(--bg); }
+  .laptop .lbase { height: 12px; background: #26221e; border-radius: 0 0 16px 16px; margin: 0 auto; width: calc(100% + 60px); max-width: 100%; position: relative; }
+  .laptop .lbase::after { content: ""; position: absolute; left: 50%; top: 0; width: 70px; height: 5px; margin-left: -35px; background: #1a1714; border-radius: 0 0 6px 6px; }
+  .band-link { margin-top: .9em; text-align: center; font-size: .85em; }
+  @media (max-width: 900px) {
+    .band-head { grid-template-columns: minmax(0, 1fr); }
+    .tour.row4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
   .proto-open { display: flex; align-items: center; gap: 1em; }
   .qr { flex: none; background: #fff; padding: 8px; border-radius: 8px; line-height: 0; }
   .qr:empty { display: none; }
@@ -419,6 +444,135 @@
   .cost-list { display: grid; gap: 12px; }
 
   .note { margin-top: 1.4em; font-family: var(--mono); font-size: .72em; color: var(--muted); }
+
+
+  /* ---------- marcações: exemplo, proposta, hipótese, a preencher ---------- */
+  .tag-s {
+    display: inline-block; font-family: var(--mono); font-size: .62em; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; border-radius: 4px; padding: .15em .5em; margin-left: .4em; vertical-align: .15em; white-space: nowrap;
+  }
+  .card > .tag-s:first-child { margin: 0 0 .6em; }
+  .tag-s.hyp { background: var(--warn-soft); color: var(--warn); }
+  .tag-s.prop { border: 1px dashed var(--muted); color: var(--muted); }
+  .tag-s.ex { border: 1px solid var(--line); color: var(--muted); font-weight: 400; }
+  .ask-q {
+    margin-top: 1.4em; display: flex; flex-wrap: wrap; gap: .3em 1em; align-items: baseline;
+    border-left: 3px solid var(--accent); padding: .3em 0 .3em 1em;
+  }
+  .ask-q span { font-family: var(--mono); font-size: .72em; text-transform: uppercase; letter-spacing: .12em; color: var(--accent); }
+  .ask-q b { font-size: 1.05em; }
+  .relato { margin-top: .8em; padding: .5em .7em; border: 1px dashed var(--line); border-radius: 8px; font-style: italic; color: var(--muted); font-size: .85em; }
+
+  /* informação espalhada x um link só */
+  .spread { display: grid; grid-template-columns: 1.4fr auto 1fr; gap: 20px; align-items: center; margin-top: .4em; }
+  .scatter { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .frag {
+    background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: .6em .75em;
+    font-size: .82em; box-shadow: 0 8px 20px rgba(0,0,0,.35);
+  }
+  .frag:nth-child(1) { transform: rotate(-2deg); }
+  .frag:nth-child(2) { transform: rotate(1.5deg); }
+  .frag:nth-child(3) { transform: rotate(-1deg); }
+  .frag:nth-child(4) { transform: rotate(2deg); }
+  .frag:nth-child(5) { transform: rotate(-1.5deg); }
+  .frag:nth-child(6) { transform: rotate(1deg); }
+  .frag .src { display: block; font-family: var(--mono); font-size: .8em; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+  .frag p { margin: .3em 0 .4em; }
+  .frag .miss { display: inline-block; font-family: var(--mono); font-size: .78em; color: var(--accent); background: var(--accent-soft); border-radius: 4px; padding: .05em .45em; }
+  .arrow-big { font-family: var(--display); font-size: 2.4em; color: var(--accent); }
+  .hub { background: var(--bg-2); border: 2px solid var(--ok); border-radius: 14px; padding: 1em 1.1em; box-shadow: 0 20px 50px rgba(0,0,0,.5); }
+  .hub .num { color: var(--ok); font-family: var(--mono); font-size: .75em; letter-spacing: .1em; }
+  .hub-t { display: block; font-family: var(--display); font-weight: 400; text-transform: uppercase; font-size: 1.3em; margin: .2em 0 .5em; }
+  .hub .kv { font-size: .9em; }
+  .hub-who { display: grid; gap: .5em; border-top: 1px solid var(--line); padding-top: .7em; font-size: .86em; }
+  .hub-who b { display: block; }
+  .hub-who span { color: var(--muted); }
+
+  ol.howto { list-style: none; counter-reset: h; display: grid; gap: .9em; margin-top: 1.1em; }
+  ol.howto li { counter-increment: h; display: grid; grid-template-columns: 2.2em 1fr; }
+  ol.howto li::before { content: counter(h); grid-row: span 2; font-family: var(--display); font-size: 1.4em; color: var(--accent); line-height: 1.1; }
+  ol.howto li span { color: var(--muted); font-size: .9em; }
+  .card.stage { border: 2px solid var(--warn); background: var(--warn-soft); }
+  .card.stage .num { color: var(--warn); }
+  .crew { margin-top: 1.2em; }
+  .crew .card h3 { font-size: 1em; }
+  .crew .card p { font-size: .86em; }
+  .crew .card.main { border: 2px solid var(--accent); background: var(--accent-soft); }
+  .crew .card.any { border-style: dashed; background: transparent; }
+  .chips-row { display: flex; flex-wrap: wrap; gap: .4em; margin-top: .6em; }
+  .chips-row .pill { color: var(--text); font-size: .85em; }
+  ol.asks { list-style: none; counter-reset: a; display: grid; gap: .8em; margin-top: .6em; }
+  ol.asks li { counter-increment: a; display: grid; grid-template-columns: 2em 1fr; }
+  ol.asks li::before { content: counter(a, decimal-leading-zero); grid-row: span 2; font-family: var(--display); color: var(--accent); }
+  ol.asks li span { color: var(--muted); font-size: .92em; }
+
+  table.cmp, table.costs, table.plan { width: 100%; border-collapse: collapse; font-size: .92em; }
+  table.cmp th, table.cmp td, table.costs th, table.costs td, table.plan th, table.plan td {
+    text-align: left; vertical-align: top; padding: .6em .8em .6em 0; border-bottom: 1px solid var(--line);
+  }
+  table.cmp thead th, table.plan thead th { font-family: var(--mono); font-size: .75em; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; font-weight: 400; }
+  table.cmp tbody th { white-space: nowrap; }
+  table.cmp td:nth-child(3) { color: var(--muted); }
+  table.costs th { font-weight: 600; width: 40%; }
+  table.plan tr.now td:first-child b { color: var(--accent); }
+  table.plan tr.goal td:first-child b { color: var(--accent); }
+  table.plan td:last-child { color: var(--muted); }
+
+  .ba { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: .4em; }
+  .ba-h { font-family: var(--mono); text-transform: uppercase; letter-spacing: .12em; font-size: .78em; margin-bottom: .6em; }
+  ol.chain { list-style: none; display: grid; gap: 0; }
+  ol.chain li {
+    background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: .55em .9em; font-size: .92em; position: relative;
+  }
+  ol.chain li + li { margin-top: 22px; }
+  ol.chain li + li::before { content: "↓"; position: absolute; top: -21px; left: 1.1em; color: var(--muted); font-size: .9em; }
+  ol.chain li.bad { border-color: rgba(230,59,46,.5); color: var(--accent); }
+  ol.chain li.good { border-color: rgba(87,194,122,.45); background: var(--ok-soft); }
+  .ba .tag-s { font-size: .6em; }
+
+  .flow-label { font-family: var(--mono); font-size: .75em; color: var(--muted); text-transform: uppercase; letter-spacing: .12em; margin: 1em 0 .5em; }
+  .flow { display: flex; align-items: stretch; gap: 8px; }
+  .flow .node {
+    flex: 1; background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+    padding: .55em .8em; font-size: .85em; display: flex; align-items: center;
+  }
+  .flow .node.split { flex-direction: column; align-items: stretch; justify-content: center; gap: .3em; }
+  .flow .ok-t { color: var(--ok); }
+  .flow .bad-t { color: var(--warn); }
+  .flow .arr { align-self: center; color: var(--accent); font-weight: 700; }
+  .rules { margin-top: 1.2em; }
+  .rules > div { border-top: 2px solid var(--line); padding-top: .6em; font-size: .9em; }
+  .rules b { display: block; margin-bottom: .2em; }
+  .rules span { color: var(--muted); }
+
+  ol.carta { list-style: none; counter-reset: c; display: grid; grid-template-columns: 1fr 1fr; gap: 14px 32px; }
+  ol.carta li { counter-increment: c; position: relative; padding-left: 2.6em; color: var(--muted); }
+  ol.carta li::before { content: counter(c, decimal-leading-zero); position: absolute; left: 0; top: -.1em; font-family: var(--display); color: var(--accent); font-size: 1.3em; }
+  ol.carta li b { color: var(--text); }
+
+  ul.list.ok li::before { content: "✓"; color: var(--ok); }
+  ul.list.open li::before { content: "?"; color: var(--warn); font-weight: 700; }
+  .card.dec { border-top: 3px solid var(--ok); }
+  .card.open { border-top: 3px solid var(--warn); }
+
+  .card.stat b { display: block; font-family: var(--display); font-weight: 400; font-size: 2.4em; color: var(--accent); line-height: 1; margin-bottom: .2em; }
+  .card.stat span { color: var(--muted); font-size: .92em; }
+
+  .timeline.t4 { grid-template-columns: repeat(4, 1fr); }
+  .step .time { display: inline-block; font-family: var(--mono); font-size: .75em; color: var(--accent); border: 1px solid var(--line); border-radius: 999px; padding: .1em .6em; margin-bottom: .4em; }
+
+  .repost { background: var(--card); border: 1px dashed var(--line); border-radius: 8px; padding: .6em .8em; }
+  .repost .row-b { display: flex; justify-content: space-between; align-items: center; margin-bottom: .3em; }
+  .repost p { font-size: .92em; }
+
+  .reply { display: flex; gap: 1.2em; align-items: center; margin-top: 1.4em; }
+  .reply[hidden] { display: none; }
+  [data-ex] { position: relative; }
+  [data-ex]::after {
+    content: attr(data-ex); position: absolute; top: -2.2em; right: 0;
+    font-family: var(--mono); font-size: .62em; text-transform: uppercase; letter-spacing: .08em;
+    border: 1px solid var(--line); color: var(--muted); border-radius: 4px; padding: .15em .5em;
+  }
 
   /* ---------- navegação ---------- */
   .progress { position: fixed; left: 0; top: 0; height: 3px; background: var(--accent); transition: width .35s ease; z-index: 5; }
@@ -457,11 +611,33 @@
     .tl.now { border-left-color: var(--accent); }
     .tl::before { top: 0; left: -9px; }
     .nav .hint { display: none; }
+    .ba, ol.carta { grid-template-columns: minmax(0, 1fr); }
+    .spread { grid-template-columns: minmax(0, 1fr); }
+    .scatter { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .arrow-big { transform: rotate(90deg); justify-self: center; line-height: 1; }
+    .flow { flex-direction: column; }
+    .flow .arr { transform: rotate(90deg); }
+    .timeline.t4 { grid-template-columns: 1fr; }
+    table.cmp thead { display: none; }
+    table.cmp tr { display: grid; padding: .4em 0; border-bottom: 1px solid var(--line); }
+    table.cmp th, table.cmp td { border: 0; padding: .1em 0; }
+    table.plan thead { display: none; }
+    table.plan tr { display: grid; grid-template-columns: 1fr 1fr; padding: .5em 0; border-bottom: 1px solid var(--line); }
+    table.plan td { border: 0; padding: .1em .5em .1em 0; }
+    table.plan td:last-child { grid-column: 1 / -1; }
     .cal { gap: 3px; }
     .cal .day { padding: 3px 4px; font-size: .7em; }
   }
   @media (max-width: 520px) {
     .flyer .f-crowd { right: -4px; bottom: -10px; }
+  }
+  /* telas baixas (notebook 720p, projetor): tudo um pouco menor pra caber sem rolar */
+  @media (min-width: 901px) and (max-height: 820px) {
+    body { font-size: clamp(14px, .9vw + 5px, 17px); }
+    .slide { padding-top: clamp(20px, 4vh, 48px); }
+    .flyers { max-width: 520px !important; }
+    .tour { margin: .8em 0 1em; }
+    .qr img, .qr canvas { width: 80px; height: 80px; }
   }
   @media (prefers-reduced-motion: reduce) {
     .slide, .progress { transition: none; }
@@ -477,64 +653,115 @@
 <div class="progress" id="progress"></div>
 
 <main class="deck" id="deck">
-
-  <!-- 1. Capa -->
   <section class="slide cover" data-title="Capa">
     <div class="inner">
-      <div class="kicker">Proposta</div>
+      <div class="kicker">Proposta · fase de conceito</div>
       <h1>A agenda da cena<br><span class="tape">underground</span></h1>
-      <p class="lead">Uma ferramenta pra <strong>gente se organizar</strong>: marcar data sem atropelar ninguém, divulgar com informação certa e fazer o público achar o rolê.</p>
+      <p class="cover-tool">Uma ferramenta pra <span class="accent">gente se organizar</span>.</p>
+      <p class="lead"><strong>Organização de classe, independente e urgente.</strong> Não é só marcar data: é banda, casa, coletivo e público agindo juntos, sem esperar instituição nenhuma.</p>
       <div class="name-tbd">Nome: <b>em aberto</b>, quem escolhe são vocês</div>
     </div>
   </section>
 
-  <!-- 2. Hoje -->
-  <section class="slide" data-title="Como é hoje">
+  <!-- Quem somos e o que pedimos -->
+  <section class="slide" data-title="Quem somos">
+    <div class="inner two">
+      <div>
+        <div class="kicker">Antes de tudo</div>
+        <h2>Quem tá falando</h2>
+        <p class="lead">Sou o Kevin. Em 2020 migrei da <strong>história</strong> pra <strong>tecnologia</strong>, e há 6 anos construo aplicações.</p>
+        <p class="lead" style="margin-top:.7em">Idealizei este projeto pra ser <strong>uma ferramenta contra o avanço fascista e imperialista</strong> que a gente vem sofrendo. Cena organizada é cena que não se cala.</p>
+      </div>
+      <div class="cost-list">
+        <div class="card stage">
+          <span class="num">EM QUE PÉ ESTÁ</span>
+          <p><b>Fase de conceito.</b> Nada foi construído de verdade ainda. O que vocês vão ver são ideias e rascunhos de tela pra gente conversar.</p>
+          <p style="margin-top:.4em"><b>O que vai ser feito depende das respostas de vocês.</b></p>
+        </div>
+        <div class="card">
+          <span class="num">HOJE QUERO OUVIR VOCÊS SOBRE</span>
+          <ol class="asks">
+            <li><b>As dores</b><span>Quais problemas são reais e quais eu imaginei.</span></li>
+            <li><b>A ferramenta</b><span>Vocês usariam pra divulgar os rolês de vocês?</span></li>
+            <li><b>O começo</b><span>Quem topa ceder rolês, indicar uma casa e ajudar a aprovar perfis.</span></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="Por que surgiu">
     <div class="inner">
-      <div class="kicker">O problema</div>
+      <div class="kicker">Por que isso surgiu</div>
+      <div class="bigquote">A extrema direita tá<br><span class="mark">tomando conta do poder.</span></div>
+      <div class="grid-2" style="align-items:start">
+        <p class="lead">E quando ela avança, quem é radical perde espaço primeiro. Some lugar pra tocar, some apoio, e a casa que abria a porta pro punk começa a pensar duas vezes.</p>
+        <p class="lead">Junto com a gente vai a arte que incomoda, que questiona e que não pede licença. <strong>É essa arte que eles querem calar.</strong></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="Organização independente">
+    <div class="inner">
+      <div class="kicker">A resposta</div>
+      <h2>Organização independente<br><span class="accent">é fundamental. E é agora.</span></h2>
+      <div class="grid-3">
+        <div class="card"><span class="num">SEM DEPENDER DE NINGUÉM</span><h3>Nem de prefeitura, nem de patrocínio, nem de algoritmo</h3><p>Se a divulgação da cena depende de plataforma de bilionário e da boa vontade de quem tá no poder, ela pode sumir de um dia pro outro.</p></div>
+        <div class="card"><span class="num">JUNTOS A GENTE AGUENTA</span><h3>Um rolê cheio vale mais que três vazios</h3><p>Quando a gente se coordena, as casas se mantêm abertas, as bandas tocam e o público aparece.</p></div>
+        <div class="card"><span class="num">FEITO POR NÓS</span><h3>A ferramenta é da cena</h3><p>Gratuita, de código aberto e cuidada por gente da cena. Fascista não entra.</p></div>
+      </div>
+      <p class="muted" style="margin-top:1.4em">Essa agenda é <b style="color:var(--text)">um jeito pequeno e prático de começar</b>. Mas antes, o que trava a gente hoje:</p>
+    </div>
+  </section>
+
+  <!-- Problema: 3 hipóteses -->
+  <section class="slide" data-title="O problema">
+    <div class="inner">
+      <div class="kicker">O problema · 3 hipóteses</div>
       <h2>Hoje a cena se organiza <span class="accent">no braço</span></h2>
       <div class="grid-3">
-        <div class="card"><span class="num">01</span><h3>Refém do algoritmo</h3><p>O alcance orgânico é baixo, e quem não segue o perfil da banda ou da casa nem fica sabendo.</p></div>
-        <div class="card"><span class="num">02</span><h3>Divulgação espalhada</h3><p>Story, post, grupo de WhatsApp, flyer impresso. É o mesmo trabalho repetido em cada canal, e o story some em 24h.</p></div>
-        <div class="card"><span class="num">03</span><h3>Data fechada no escuro</h3><p>Pra escolher o dia, é perguntar no grupo ou rolar o feed de várias casas. Ninguém vê a agenda da cidade inteira.</p></div>
-        <div class="card"><span class="num">04</span><h3>Choque de datas</h3><p>Você só descobre o outro rolê na mesma noite quando sai o flyer, e aí já fechou tudo.</p></div>
-        <div class="card"><span class="num">05</span><h3>Flyer sem informação</h3><p>Tem a arte, mas falta endereço, horário ou preço. O público vai perguntar na DM, ou desiste.</p></div>
-        <div class="card"><span class="num">06</span><h3>Mudança que não chega</h3><p>Adiou, trocou de local, uma banda saiu. A correção não chega em quem já viu o post original.</p></div>
+        <div class="card"><span class="num">01</span><h3>Divulgação refém do algoritmo</h3><p>Story, post, grupo e flyer, e mesmo assim só chega em quem já segue a banda ou a casa.</p></div>
+        <div class="card"><span class="num">02</span><h3>Data fechada no escuro</h3><p>Ninguém vê a agenda da cidade inteira. O outro rolê na mesma noite só aparece quando sai o flyer.</p></div>
+        <div class="card"><span class="num">03</span><h3>Informação que não chega</h3><p>Falta endereço, horário ou preço. E quando algo muda, a correção não alcança quem viu o post original.</p></div>
       </div>
+      <div class="ask-q"><span>Pra conversar</span><b>Qual dessas pega mais pra vocês? O que ficou de fora?</b></div>
     </div>
   </section>
 
-  <!-- 3. Choque de datas -->
-  <section class="slide" data-title="Choque de datas">
+  <!-- Exemplo: informação espalhada -->
+  <section class="slide" data-title="Informação espalhada">
     <div class="inner">
       <div class="kicker">Exemplo · nomes fictícios</div>
-      <h2>Sábado, 17 de outubro</h2>
-      <div class="flyers">
-        <div class="flyer">
-          <div class="f-date">SÁB 17/10 · 19H</div>
-          <div class="f-title">Noite<br>Crust</div>
-          <div class="f-meta">Lapa · Centro<br>R$ 20</div>
-          <div class="f-crowd">~30 pessoas</div>
+      <h2>Um rolê, <span class="accent">seis lugares</span></h2>
+      <div class="spread">
+        <div class="scatter">
+          <div class="frag"><span class="src">Story</span><p>“SÁBADO NO PORÃO 🔥”</p><span class="miss">sumiu em 24h</span></div>
+          <div class="frag"><span class="src">Post no feed</span><p>“Doom no Porão, sáb 17!”</p><span class="miss">sem horário</span></div>
+          <div class="frag"><span class="src">Grupo do WhatsApp</span><p>“alguém sabe quanto é?”</p><span class="miss">sem preço</span></div>
+          <div class="frag"><span class="src">Flyer impresso</span><p>“Galpão Norte · 20h”</p><span class="miss">local antigo</span></div>
+          <div class="frag"><span class="src">DM da banda</span><p>“que horas abre a casa?”</p><span class="miss">a mesma pergunta 20x</span></div>
+          <div class="frag"><span class="src">Perfil da casa</span><p>“agenda de outubro”</p><span class="miss">não atualizou</span></div>
         </div>
-        <div class="flyer">
-          <div class="f-date">SÁB 17/10 · 20H</div>
-          <div class="f-title">Doom<br>no Porão</div>
-          <div class="f-meta">Tijuca · Zona Norte<br>R$ 15</div>
-          <div class="f-crowd">~30 pessoas</div>
-        </div>
-        <div class="flyer">
-          <div class="f-date">SÁB 17/10 · 18H</div>
-          <div class="f-title">Matinê<br>Hardcore</div>
-          <div class="f-meta">Botafogo · Zona Sul<br>R$ 20</div>
-          <div class="f-crowd">~30 pessoas</div>
+        <div class="arrow-big" aria-hidden="true">→</div>
+        <div class="hub">
+          <span class="num">UM LINK SÓ</span>
+          <b class="hub-t">Doom no Porão</b>
+          <dl class="kv">
+            <dt>quando</dt><dd>Sáb 17/10 · portas 20h</dd>
+            <dt>onde</dt><dd>Porão 77 · Tijuca</dd>
+            <dt>quanto</dt><dd>R$ 15 · 18+</dd>
+            <dt>quem</dt><dd>Lodo, Céu de Chumbo</dd>
+          </dl>
+          <div class="hub-who">
+            <div><b>Pra banda</b><span>cadastra uma vez e compartilha o link em todo lugar</span></div>
+            <div><b>Pro público</b><span>tudo certo num lugar, e os outros rolês da região do lado</span></div>
+          </div>
         </div>
       </div>
-      <div class="math"><span>3 rolês</span><span class="muted">·</span><span>o mesmo público</span><span class="muted">·</span><span class="accent">30 + 30 + 30</span></div>
-      <p class="lead" style="margin-top:.6em">Com a data combinada, podiam ser <strong>três noites cheias</strong> em vez de três noites vazias, com as bandas, as casas e o público ganhando.</p>
+      <div class="ask-q"><span>Pra conversar</span><b>Onde a informação do rolê de vocês mais se perde hoje?</b></div>
     </div>
   </section>
 
-  <!-- 4. Público -->
   <section class="slide" data-title="O público">
     <div class="inner two">
       <div>
@@ -550,11 +777,29 @@
     </div>
   </section>
 
-  <!-- 5. A ideia -->
+  <!-- O que já existe -->
+  <section class="slide" data-title="O que já existe">
+    <div class="inner">
+      <div class="kicker">O que já existe</div>
+      <h2>Já tem ferramenta.<br><span class="accent">Por que não basta?</span></h2>
+      <table class="cmp">
+        <thead><tr><th></th><th>Faz bem</th><th>Deixa a desejar</th></tr></thead>
+        <tbody>
+          <tr><th>Instagram</th><td>Alcança quem já segue. Arte e vídeo.</td><td>O algoritmo decide quem vê. Story some em 24h. Não tem agenda.</td></tr>
+          <tr><th>Grupos de WhatsApp</th><td>Chega direto, a galera conversa.</td><td>Some no meio da conversa. É fechado. Não dá pra buscar por data.</td></tr>
+          <tr><th>Sympla, Ingresse e afins</th><td>Ingresso e página de evento.</td><td>Taxa no ingresso. Rolê pequeno não aparece. Pede cadastro.</td></tr>
+          <tr><th>Perfis de agenda da cena</th><td>Curadoria de quem conhece.</td><td>Depende de uma pessoa fazendo à mão. Para quando ela cansa.</td></tr>
+        </tbody>
+      </table>
+      <p class="lead" style="margin-top:1em"><strong>Complementa, não substitui.</strong> O post continua no Instagram e o grupo continua no WhatsApp. A agenda é onde a informação fica certa e dá pra ver a cidade inteira.</p>
+      <div class="ask-q"><span>Pra conversar</span><b>O que vocês usam hoje que funciona bem?</b></div>
+    </div>
+  </section>
+
   <section class="slide" data-title="A ideia">
     <div class="inner">
       <div class="kicker">A ideia</div>
-      <h2>Uma agenda só,<br><span class="accent">compartilhada pela cena</span></h2>
+      <h2>Uma agenda só, <span class="accent">em duas visões</span></h2>
       <p class="lead" style="margin-bottom:1.4em">A cena tem banda, casa, público e gente disposta a organizar. O que falta é <strong>um lugar comum pra informação</strong>.</p>
       <div class="grid-2">
         <div class="card">
@@ -571,7 +816,37 @@
     </div>
   </section>
 
-  <!-- 6. Calendário -->
+  <!-- O que muda no trabalho da banda -->
+  <section class="slide" data-title="O que muda pra banda">
+    <div class="inner">
+      <div class="kicker">O que muda no trabalho da banda</div>
+      <h2>Cadastra uma vez,<br><span class="accent">divulga em todo lugar</span></h2>
+      <div class="ba">
+        <div class="ba-col">
+          <div class="ba-h muted">Hoje</div>
+          <ol class="chain">
+            <li>Faz a arte</li>
+            <li>Posta no feed e no story, e de novo no dia</li>
+            <li>Manda em 3, 4 grupos</li>
+            <li>Responde DM perguntando endereço e preço</li>
+            <li class="bad">Mudou algo? Refaz tudo e torce pra chegar</li>
+          </ol>
+        </div>
+        <div class="ba-col">
+          <div class="ba-h accent">Com a agenda</div>
+          <ol class="chain">
+            <li><b>Cadastra o rolê uma vez</b> · ~5 min</li>
+            <li class="good">Sai pronto: link com prévia, <b>texto pro grupo</b> e <b>arte-base pro story</b></li>
+            <li>Posta onde já posta</li>
+            <li class="good">Mudou algo? Atualiza uma vez e sai o aviso pronto pra repostar</li>
+          </ol>
+        </div>
+      </div>
+      <p class="muted" style="margin-top:1em">Não é mais um canal pra alimentar. <b style="color:var(--text)">É de onde sai o que vai pros canais que vocês já usam.</b></p>
+      <div class="ask-q"><span>Pra conversar</span><b>Quanto tempo vocês gastam hoje pra divulgar um rolê?</b></div>
+    </div>
+  </section>
+
   <section class="slide" data-title="Calendário da cena">
     <div class="inner two">
       <div>
@@ -584,7 +859,7 @@
         </ul>
       </div>
       <div class="screen" aria-label="Exemplo de tela do calendário">
-        <div class="screen-bar"><b>Outubro 2026</b><span class="pill">Grande Rio · 40 km</span></div>
+        <div class="screen-bar"><b>Outubro 2026</b></div>
         <div class="cal" id="cal"></div>
         <div class="legend">
           <span style="--c: var(--card)">livre</span>
@@ -595,71 +870,93 @@
     </div>
   </section>
 
-  <!-- 7. Aviso de conflito -->
+  <!-- Aviso de conflito -->
   <section class="slide" data-title="Aviso de conflito">
     <div class="inner two">
       <div>
         <div class="kicker">Pra quem organiza · 2</div>
         <h2>Aviso de choque de data</h2>
-        <p class="lead">Na hora de criar o evento, a plataforma <strong>avisa se já tem rolê perto naquele dia</strong> e sugere datas mais livres.</p>
-        <p class="muted" style="margin-top:1em">Ninguém é proibido de nada: a decisão continua sendo de quem organiza. A diferença é que agora a data é escolhida com informação.</p>
+        <p class="lead">Na hora de criar o evento, a plataforma <strong>mostra o que já tá marcado perto</strong>.</p>
+        <ul class="list" style="margin-top:1em">
+          <li><b>Mesma data, num raio de 15 km</b></li>
+          <li><b>Subgênero próximo pesa mais</b> <span>doom com doom, punk com hardcore.</span></li>
+          <li><b>Só conta evento confirmado.</b> <span>Rascunho não reserva data.</span></li>
+          <li><b>Não bloqueia nada.</b> <span>Quem decide é quem organiza.</span></li>
+        </ul>
+      <div class="ask-q"><span>Pra conversar</span><b>Que raio faz sentido? Subgênero deve contar?</b></div>
       </div>
       <div class="screen" aria-label="Exemplo de tela de novo evento">
-        <div class="screen-bar"><b>Novo evento</b><span class="pill">rascunho</span></div>
+        <div class="screen-bar"><b>Novo evento</b></div>
         <div class="field"><label>Data</label><div class="input focus">Sábado, 17/10/2026 · 19h</div></div>
         <div class="alert">
-          <b>⚠ Já tem 3 rolês num raio de 12 km nesse dia</b>
+          <b>ℹ Já tem 3 rolês confirmados num raio de 15 km nesse dia</b>
           <ul>
-            <li>Noite Crust · Lapa · 2 km</li>
-            <li>Doom no Porão · Tijuca · 6 km</li>
-            <li>Matinê Hardcore · Botafogo · 5 km</li>
+            <li>Doom no Porão · Tijuca · 6 km · doom <span class="pill warn">mesmo subgênero</span></li>
+            <li>Noite Crust · Lapa · 2 km · crust</li>
+            <li>Matinê Hardcore · Botafogo · 5 km · hardcore</li>
           </ul>
-          <div class="small muted" style="margin-bottom:.4em">Datas mais livres:</div>
-          <div class="alts">
-            <span class="pill ok">Sex 16/10 · 0 rolês</span>
-            <span class="pill ok">Sáb 24/10 · 1 rolê</span>
-          </div>
+          <div class="small muted">Pra comparar: sex 16/10 tem 0 rolês perto, sáb 24/10 tem 1.</div>
         </div>
         <div class="field"><label>Local</label><div class="input muted">Busque o endereço e confirme no mapa</div></div>
         <div style="display:flex; gap:.5em; justify-content:flex-end">
-          <span class="btn">Manter 17/10</span><span class="btn primary">Trocar data</span>
+          <span class="btn">Ver calendário</span><span class="btn primary">Seguir com 17/10</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 8. Página do evento -->
+  <!-- Página do evento -->
   <section class="slide" data-title="Página do evento">
     <div class="inner two">
       <div>
         <div class="kicker">Pra quem organiza · 3</div>
         <h2>Um link que tá sempre certo</h2>
-        <ul class="list">
-          <li><b>Formulário completo</b> <span>O evento não sai sem data, horário, endereço confirmado no mapa e preço.</span></li>
-          <li><b>Status em destaque</b> <span>Confirmado, adiado, cancelado, local alterado. Quem abrir o link vê a versão atual.</span></li>
-          <li><b>Line-up ligado</b> <span>É um evento só, e ele aparece na agenda de todas as bandas marcadas, todas com a mesma informação.</span></li>
-          <li><b>Pronto pras redes</b> <span>O link já sai com preview pro WhatsApp e pro Instagram.</span></li>
-        </ul>
+        <p class="lead">Cada rolê ganha <strong>uma página própria</strong>. É o link dela que vai no story, no grupo e na bio.</p>
+        <ol class="howto">
+          <li><b>Cadastra uma vez</b><span>Data, horário, endereço confirmado no mapa, preço e line-up. Sem o básico, não publica, então ninguém precisa perguntar na DM.</span></li>
+          <li><b>Compartilha o link</b><span>Ele já sai com prévia bonita no WhatsApp e no Instagram, e aparece na agenda de todas as bandas do line-up.</span></li>
+          <li><b>Mudou algo? Edita a página</b><span>Quem abrir o link vê o aviso em destaque. Quem salvou no calendário recebe a mudança sozinho. E sai um aviso pronto pra repostar, pra chegar em quem só viu o post antigo.</span></li>
+        </ol>
       </div>
       <div class="screen" aria-label="Exemplo de página de evento">
-        <div class="ev-flyer">Doom<br>no Porão</div>
+        <div class="screen-bar"><b>Doom no Porão</b></div>
         <div class="status-banner">⚠ <span class="mono">LOCAL ALTERADO</span> · agora no Espaço Exemplo, Tijuca</div>
         <dl class="kv">
           <dt>quando</dt><dd>Sáb 17/10 · portas 20h</dd>
-          <dt>onde</dt><dd>R. Exemplo, 123 · Tijuca <span class="accent">· ver no mapa</span></dd>
+          <dt>onde</dt><dd>R. Exemplo, 123 · Tijuca</dd>
           <dt>quanto</dt><dd>R$ 15 na porta · 18+</dd>
         </dl>
-        <div class="lineup">
-          <span class="pill linked">Banda A</span>
-          <span class="pill linked">Banda B</span>
-          <span class="pill">Banda C</span>
+        <div class="repost">
+          <div class="row-b"><span class="small muted">Aviso pronto pra repostar</span><span class="pill">copiar</span></div>
+          <p>⚠ MUDOU O LOCAL: <b>Doom no Porão</b>, sáb 17/10, agora no Espaço Exemplo (Tijuca). Tudo certinho em ‹nome›/e/doom-no-porao</p>
         </div>
-        <div class="linkbox"><span>‹nome›/e/doom-no-porao</span><span class="pill">copiar</span></div>
       </div>
     </div>
   </section>
 
-  <!-- 9. Público -->
+  <section class="slide" data-title="Protótipo da banda" id="slide-band">
+    <div class="inner">
+      <div class="band-head">
+        <div>
+          <div class="kicker">Rascunho clicável · pra quem organiza</div>
+          <h2>Um rascunho<br><span class="accent">do lado da banda</span></h2>
+        </div>
+        <p class="muted small" style="max-width:24em"><b style="color:var(--text)">Não é o app.</b> É um rascunho de conceito pra vocês imaginarem e criticarem. Banda e dados de exemplo.</p>
+      </div>
+      <div class="tour row4" id="tour-band">
+        <button data-tela="painel" class="on"><b>Painel</b><span>Próximos rolês e movimento da cena</span></button>
+        <button data-tela="novo?nome=Sludge%20de%20Halloween&amp;data=2026-10-31&amp;espaco=porao"><b>Choque de data</b><span>Criando um rolê num sábado lotado</span></button>
+        <button data-tela="calendario"><b>Calendário</b><span>A cena inteira, mês a mês</span></button>
+        <button data-tela="evento-2"><b>Mudar status</b><span>Adiado, local alterado, cancelado</span></button>
+      </div>
+      <div class="laptop" id="band-laptop">
+        <div class="lscreen" id="band-screen"><iframe id="band-frame" title="Protótipo da gestão da banda, navegável"></iframe></div>
+        <div class="lbase"></div>
+      </div>
+      <div class="band-link muted">Abre no computador: <a class="proto-url" style="display:inline" href="https://knv-os.github.io/under/prototipo-banda.html" target="_blank" rel="noopener">knv-os.github.io/under/prototipo-banda.html</a></div>
+    </div>
+  </section>
+
   <section class="slide" data-title="Pro público">
     <div class="inner two">
       <div>
@@ -667,7 +964,7 @@
         <h2>Abre o link e vê o que tem perto</h2>
         <ul class="list">
           <li><b>Sem login e sem baixar app</b> <span>Funciona direto no navegador do celular.</span></li>
-          <li><b>Raio de 40 km</b> <span>cobre o Grande Rio e a Grande SP, e dá pra expandir pras cidades vizinhas, como Serrana, Lagos, Baixada Santista e Campinas.</span></li>
+          <li><b>Raio de 40 km</b> <span>cobre o Grande Rio, e dá pra expandir pra Serrana e Lagos.</span></li>
           <li><b>Ordem por distância e data</b> <span>Nada de algoritmo decidindo o que aparece.</span></li>
           <li><b>Um toque</b> <span>pra abrir no mapa, salvar no calendário ou mandar pros amigos.</span></li>
         </ul>
@@ -704,13 +1001,12 @@
     </div>
   </section>
 
-  <!-- Protótipo ao vivo -->
   <section class="slide" data-title="Protótipo" id="slide-proto">
     <div class="inner two">
       <div>
-        <div class="kicker">Já dá pra mexer</div>
-        <h2>O protótipo<br><span class="accent">tá no ar</span></h2>
-        <p class="lead">A visão de quem vai no rolê, funcionando. Os dados são de exemplo, mas <strong>o jeito de usar é esse</strong>.</p>
+        <div class="kicker">Rascunho clicável · pra quem vai no rolê</div>
+        <h2>E um rascunho<br><span class="accent">do lado do público</span></h2>
+        <p class="lead">Também <strong>não é o app pronto</strong>: é pra mostrar a ideia e ouvir o que vocês mudariam. Dados de exemplo.</p>
         <div class="tour" id="tour">
           <button data-tela="lista" class="on"><b>Lista + mapa</b><span>Os rolês da semana por data e distância, com os pinos no mapa.</span></button>
           <button data-tela="evento-2"><b>Local alterado</b><span>Quem abre o evento vê o aviso em destaque, sem depender de post novo.</span></button>
@@ -731,123 +1027,234 @@
     </div>
   </section>
 
-  <!-- 10. Como funciona -->
+  <!-- Como funciona -->
   <section class="slide" data-title="Como funciona">
     <div class="inner">
       <div class="kicker">Como funciona pra banda</div>
       <h2>Quatro passos</h2>
       <div class="steps">
-        <div class="step"><h3>Cria o perfil</h3><p>Da banda, do coletivo ou do espaço: subgêneros, links e fotos.</p></div>
-        <div class="step"><h3>Perfil aprovado</h3><p>Uma pessoa da cena confere o perfil, e depois disso você publica direto.</p></div>
-        <div class="step"><h3>Escolhe a data</h3><p>Olhando o calendário da cena, com o aviso de choque como última checagem.</p></div>
-        <div class="step"><h3>Publica e compartilha</h3><p>Um link só, que aparece pro público no raio e na agenda de todo o line-up.</p></div>
+        <div class="step"><h3>Cria o perfil</h3><span class="time">~10 min</span><p>Da banda, do coletivo ou do espaço: subgêneros, links e fotos.</p></div>
+        <div class="step"><h3>Aprovação</h3><span class="time">até 3 dias</span><p>Alguém do grupo de aprovação confere o perfil. Depois disso, publica direto.</p></div>
+        <div class="step"><h3>Escolhe a data</h3><span class="time">no calendário</span><p>Olhando o que já tá marcado, com o aviso de choque como última checagem.</p></div>
+        <div class="step"><h3>Publica</h3><span class="time">~5 min</span><p>Sai o link, o texto pro grupo e a arte-base pro story.</p></div>
       </div>
+      <div class="card" style="margin-top:1.4em; border-left:3px solid var(--warn)">
+        <b>E se o perfil for recusado?</b> <span class="muted">Vem junto o motivo. Dá pra corrigir e mandar de novo, ou pedir que outras duas pessoas do grupo revisem.</span>
+      </div>
+      <p class="note">Tempos e prazos ainda vão ser medidos no beta.</p>
     </div>
   </section>
 
-  <!-- 11. Comunidade -->
-  <section class="slide" data-title="Comunidade">
-    <div class="inner two">
-      <div>
-        <div class="kicker">Comunidade</div>
-        <h2>Aberta pra cena,<br>com regras claras</h2>
-        <p class="lead">Toda vertente é bem-vinda: punk, hardcore, crust, grind, metal, stoner, doom, noise, post-rock, garage…</p>
-      </div>
-      <ul class="list">
-        <li><b>Perfil passa por aprovação</b> <span>feita por gente da própria cena, que sabe quem é quem.</span></li>
-        <li><b>Depois de aprovado, publica direto</b> <span>sem fila e sem burocracia pra divulgar rolê.</span></li>
-        <li><b>Qualquer pessoa pode denunciar</b> <span>de forma anônima e sem precisar de conta.</span></li>
-        <li><b>Fascismo e discurso de ódio não entram</b> <span>nem racismo, LGBTfobia ou machismo. Vale pro perfil e pro line-up.</span></li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- 12. De graça / aberto -->
-  <section class="slide" data-title="Gratuito e aberto">
+  <!-- Como a agenda começa cheia -->
+  <section class="slide" data-title="Agenda cheia">
     <div class="inner">
-      <div class="kicker">Princípios</div>
-      <h2>Feito pela cena,<br><span class="accent">não pra lucrar com ela</span></h2>
+      <div class="kicker">Como a agenda começa cheia</div>
+      <h2>Ninguém usa agenda vazia</h2>
+      <p class="lead">Por isso ela só abre pro público <strong>depois de cheia</strong>.</p>
+      <div class="timeline t4">
+        <div class="tl now"><b>Cadastro à mão</b><p>A gente cadastra os rolês de 5 a 8 casas e coletivos âncora.</p></div>
+        <div class="tl"><b>Parceiros publicam</b><p>As casas e bandas âncora passam a cadastrar os próprios rolês, com a gente do lado.</p></div>
+        <div class="tl"><b>Cobertura mínima</b><p>4 semanas seguidas com a agenda das casas âncora completa.</p></div>
+        <div class="tl goal"><b>Abre pro público</b><p>Quem chega já encontra a semana inteira de rolê.</p></div>
+      </div>
+      <div class="ask-q"><span>Pra conversar</span><b>Que casas e coletivos vocês indicariam como âncora?</b></div>
+    </div>
+  </section>
+
+  <!-- Quem decide o quê -->
+  <section class="slide" data-title="Quem decide o quê">
+    <div class="inner">
+      <div class="kicker">Moderação e governança</div>
+      <h2>Quem decide o quê</h2>
+      <div class="flow-label">Aprovação de perfil</div>
+      <div class="flow">
+          <div class="node">Banda envia o perfil</div>
+          <span class="arr" aria-hidden="true">→</span>
+          <div class="node">Vai pra 1 pessoa do grupo de aprovação</div>
+          <span class="arr" aria-hidden="true">→</span>
+          <div class="node">Decide em até 3 dias</div>
+          <span class="arr" aria-hidden="true">→</span>
+          <div class="node split"><span class="ok-t">Aprovado: publica direto</span><span class="bad-t">Recusado: recebe o motivo</span></div>
+          <span class="arr" aria-hidden="true">→</span>
+          <div class="node">Recurso: outras 2 pessoas revisam</div>
+      </div>
+      <div class="flow-label">Denúncia</div>
+      <div class="flow">
+          <div class="node">Qualquer pessoa denuncia, anônima e sem conta</div>
+          <span class="arr" aria-hidden="true">→</span>
+          <div class="node">2 pessoas do grupo revisam</div>
+          <span class="arr" aria-hidden="true">→</span>
+          <div class="node">Mantém, pede correção ou tira do ar</div>
+          <span class="arr" aria-hidden="true">→</span>
+          <div class="node">Quem foi denunciado é avisado e pode contestar</div>
+      </div>
+      <div class="grid-3 rules">
+        <div><b>Grupo pequeno, com rodízio</b><span>5 a 7 pessoas da cena, trocando a cada 3 meses.</span></div>
+        <div><b>Conflito de interesse</b><span>Quem toca na banda, trabalha na casa ou é próximo não avalia. Passa pra outra pessoa.</span></div>
+        <div><b>Limites da denúncia anônima</b><span>Nunca derruba nada sozinha, sempre passa por gente. Caso grave (ódio, ameaça) sai do ar enquanto revisa. Sem contato, não dá pra acompanhar o caso.</span></div>
+      </div>
+      <div class="ask-q"><span>Pra conversar</span><b>Vocês confiariam nesse processo? Quem deveria estar no grupo?</b></div>
+    </div>
+  </section>
+
+  <!-- Carta de princípios -->
+  <section class="slide" data-title="Carta de princípios">
+    <div class="inner">
+      <div class="kicker">Compromisso</div>
+      <h2>Carta de princípios</h2>
+      <ol class="carta">
+        <li><b>Gratuito pra banda e pro público.</b> Sempre.</li>
+        <li><b>Ninguém paga pra aparecer.</b> A ordem é distância e data, sem algoritmo.</li>
+        <li><b>Dinheiro não compra espaço.</b> Sem anúncio e sem patrocínio que compre destaque ou mande no conteúdo. Se faltar grana pra manter, vem da própria cena, com conta aberta.</li>
+        <li><b>Fascismo não entra.</b> Nem racismo, LGBTfobia ou machismo. Vale pro perfil e pro line-up.</li>
+        <li><b>Toda vertente é bem-vinda.</b> Punk, hardcore, crust, grind, metal, stoner, doom, noise, post-rock, garage…</li>
+        <li><b>Código e dados abertos.</b> E a localização de quem usa nunca sai do celular.</li>
+      </ol>
+      <div class="ask-q"><span>Pra conversar</span><b>Falta algum princípio? Algum vocês tirariam?</b></div>
+    </div>
+  </section>
+
+  <!-- Custo, quem mantém, se parar -->
+  <section class="slide" data-title="Custo e manutenção">
+    <div class="inner">
+      <div class="kicker">Custo, quem mantém e se parar</div>
+      <h2>Quanto custa de verdade</h2>
+      <div class="grid-2" style="align-items:start">
+        <table class="costs">
+          <tr><th>Domínio</th><td>~R$ 40 por ano</td></tr>
+          <tr><th>Hospedagem e banco de dados</th><td>R$ 0 nos planos gratuitos</td></tr>
+          <tr><th>Mapa</th><td>R$ 0 no piloto. Se crescer muito, pode passar a custar.</td></tr>
+          <tr><th>Horas de trabalho</th><td>Voluntárias, de quem tá construindo</td></tr>
+        </table>
+        <div class="cost-list">
+          <div class="card"><span class="num">QUEM MANTÉM</span><p>Código: Kevin e quem chegar pra somar. Moderação: o grupo de aprovação.</p></div>
+          <div class="card"><span class="num">DE QUEM É</span><p>Domínio e repositório: a gente decide junto com a cena, pra não ficar na mão de uma pessoa só.</p></div>
+          <div class="card"><span class="num">SE O PROJETO PARAR</span><p>Os dados são abertos e dá pra exportar tudo (planilha e calendário). O código é aberto: qualquer coletivo pode colocar no ar de novo.</p></div>
+        </div>
+      </div>
+      <div class="ask-q"><span>Pra conversar</span><b>Quem vocês acham que deveria ser dono do domínio?</b></div>
+    </div>
+  </section>
+
+  <!-- Decidido x em aberto -->
+  <section class="slide" data-title="Decidido e em aberto">
+    <div class="inner">
+      <div class="kicker">Onde a opinião de vocês pesa</div>
+      <h2>O que já tá decidido<br><span class="accent">e o que tá em aberto</span></h2>
+      <div class="grid-2">
+        <div class="card dec">
+          <span class="num" style="color:var(--ok)">DECIDIDO</span>
+          <ul class="list ok">
+            <li>Gratuito</li>
+            <li>Ninguém paga pra aparecer</li>
+            <li>O aviso de choque informa, não bloqueia</li>
+            <li>Público não precisa de login</li>
+            <li>Código aberto</li>
+          </ul>
+        </div>
+        <div class="card open">
+          <span class="num" style="color:var(--warn)">EM ABERTO · VOCÊS DECIDEM JUNTO</span>
+          <ul class="list open">
+            <li>O nome</li>
+            <li>O raio <span>15 km pro aviso? 40 km pro público?</span></li>
+            <li>Os critérios de aprovação de perfil</li>
+            <li>O formato dos avisos <span>o que conta como choque e como aparece</span></li>
+            <li>Quem entra no grupo de aprovação</li>
+          </ul>
+        </div>
+      </div>
+      <div class="ask-q"><span>Pra conversar</span><b>O que tá em aberto que vocês querem decidir junto?</b></div>
+    </div>
+  </section>
+
+  <!-- Piloto -->
+  <section class="slide" data-title="Piloto">
+    <div class="inner">
+      <div class="kicker">Piloto</div>
+      <h2>Começamos numa região:<br><span class="accent">o Grande Rio</span></h2>
+      <p class="lead">É onde a gente tá, conhece as casas e consegue cadastrar a agenda à mão.</p>
+      <div class="flow-label" style="margin-top:1.2em">Pra crescer, o piloto precisa bater</div>
       <div class="grid-3">
-        <div class="card"><span class="num">GRATUITO</span><h3>Pra banda e pro público</h3><p>Sem taxa pra publicar e sem anúncio empurrado no meio da agenda. Manter no ar custa ~R$ 40 por ano.</p></div>
-        <div class="card"><span class="num">SEM ALGORITMO</span><h3>Distância e data</h3><p>Ninguém paga pra aparecer primeiro. O rolê mais perto aparece primeiro.</p></div>
-        <div class="card"><span class="num">CÓDIGO ABERTO</span><h3>Pra outras cenas também</h3><p>RJ e SP testam primeiro, e o plano é levar pro Brasil inteiro. O código fica aberto pra outros movimentos montarem a agenda deles também.</p></div>
+        <div class="card stat"><b>3 meses</b><span>no ar, com a agenda aberta pro público</span></div>
+        <div class="card stat"><b>30+</b><span>bandas, coletivos e casas publicando</span></div>
+        <div class="card stat"><b>70%</b><span>dos rolês das casas âncora cadastrados pelos próprios organizadores</span></div>
       </div>
+      <p class="muted" style="margin-top:1.2em"><b style="color:var(--text)">Cidade nova entra quando um coletivo local pedir</b> e se responsabilizar pela aprovação de perfis de lá.</p>
+      <div class="ask-q"><span>Pra conversar</span><b>Esses critérios fazem sentido?</b></div>
     </div>
   </section>
 
-  <!-- Expansão -->
-  <section class="slide" data-title="Expansão">
-    <div class="inner">
-      <div class="kicker">Expansão</div>
-      <h2>Começa no RJ e em SP.<br><span class="accent">O plano é organizar o Brasil inteiro.</span></h2>
-      <div class="phases">
-        <div class="card phase beta"><span class="badge">BETA</span><span class="num">FASE 1</span><h3>Rio e São Paulo</h3><p>As duas maiores cenas são as beta testers. Bandas, coletivos e espaços parceiros usam desde o primeiro dia, apontam o que tá ruim e ajudam a acertar a ferramenta.</p></div>
-        <div class="card phase"><span class="num">FASE 2</span><h3>Outras capitais</h3><p>Com o modelo validado, a agenda abre pra novas cidades, puxada por coletivos locais que queiram cuidar da cena da sua região.</p></div>
-        <div class="card phase"><span class="num">FASE 3</span><h3>Brasil inteiro</h3><p>Uma agenda só pra cena do país: cada região organiza a sua, e dá pra enxergar o que rola nas outras cidades na hora de planejar uma turnê.</p></div>
-      </div>
-      <p class="muted" style="margin-top:1.4em">Por que começar por RJ e SP? É onde tem mais rolê por semana e mais choque de data. <b style="color:var(--text)">Se funcionar lá, funciona em qualquer lugar.</b></p>
-    </div>
-  </section>
-
-  <!-- 13. Custos -->
-  <section class="slide" data-title="Quanto custa">
-    <div class="inner two">
-      <div>
-        <div class="kicker">Quanto custa manter no ar?</div>
-        <div class="price">≈ R$ 40<small>por ano</small></div>
-        <p class="lead">É só o <strong>domínio</strong> (o endereço do site). O resto roda em serviços gratuitos.</p>
-        <p class="muted" style="margin-top:1em">Por isso a agenda não precisa cobrar das bandas, encher de anúncio ou depender de patrocínio pra continuar existindo.</p>
-      </div>
-      <div class="cost-list">
-        <div class="card"><span class="num">POR QUE É TÃO BARATO · 1</span><h3>A agenda é pequena</h3><p>Algumas centenas de eventos por mês no RJ e em SP é pouquíssimo dado pra qualquer serviço de hospedagem.</p></div>
-        <div class="card"><span class="num">POR QUE É TÃO BARATO · 2</span><h3>Todo mundo vê a mesma agenda</h3><p>Ela fica guardada pronta (em cache), e o próprio celular de cada pessoa calcula o que tá perto. Não precisa de servidor trabalhando a cada visita.</p></div>
-        <div class="card"><span class="num">POR QUE É TÃO BARATO · 3</span><h3>Pouca coisa muda por dia</h3><p>Só quando alguém cria ou edita um evento, e isso cabe com folga nos planos gratuitos.</p></div>
-        <p class="small muted" style="margin-top:.2em">E de bônus: a localização de quem usa <b style="color:var(--text)">nunca sai do celular</b>.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 14. O que precisamos -->
-  <section class="slide ask" data-title="O que precisamos">
-    <div class="inner">
-      <div class="kicker">Onde vocês entram</div>
-      <h2>A gente não quer fazer isso sozinho</h2>
-      <div class="grid-4">
-        <div class="card"><h3>Contar as dores</h3><p>Qual desses problemas mais pega pra vocês? O que ficou de fora?</p></div>
-        <div class="card"><h3>Ser beta tester</h3><p>No RJ e em SP: usar desde o começo, publicar os rolês e falar o que tá ruim, antes de levar pro resto do Brasil.</p></div>
-        <div class="card"><h3>Escolher o nome</h3><p>O nome e a cara do projeto vão sair de vocês, não da gente.</p></div>
-        <div class="card"><h3>Ajudar a cuidar</h3><p>Coletivos e pessoas da cena que topem aprovar perfis e olhar as denúncias.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 15. Próximos passos -->
+  <!-- Próximos passos -->
   <section class="slide" data-title="Próximos passos">
     <div class="inner">
-      <div class="kicker">Próximos passos</div>
-      <h2>Do beta no RJ e em SP<br><span class="accent">ao Brasil inteiro</span></h2>
-      <div class="timeline">
-        <div class="tl now"><b>Conversas</b><p>Ouvir bandas, coletivos e espaços do RJ e de SP. É aqui que a gente tá.</p></div>
-        <div class="tl"><b>Nome e cara</b><p>Escolha do nome junto com os artistas parceiros.</p></div>
-        <div class="tl"><b>Telas</b><p>Desenhar as telas e validar com quem vai usar.</p></div>
-        <div class="tl"><b>Primeira versão</b><p>Calendário, aviso de conflito, página do evento e busca por km.</p></div>
-        <div class="tl"><b>Beta no RJ e em SP</b><p>A agenda começa já cheia, com os rolês dos parceiros testando tudo.</p></div>
-        <div class="tl goal"><b>Brasil inteiro</b><p>Abrir cidade por cidade, com coletivos locais cuidando de cada região.</p></div>
+      <div class="kicker">Próximos passos · datas propostas</div>
+      <h2>Do papo de hoje<br><span class="accent">à agenda no ar</span></h2>
+      <table class="plan">
+        <thead><tr><th>Etapa</th><th>Quando</th><th>Quem</th><th>Deu certo se…</th></tr></thead>
+        <tbody>
+          <tr class="now"><td><b>Conversas</b><br><span class="small">← estamos aqui</span></td><td>out–nov/2026</td><td>Kevin + quem chegar</td><td>15+ conversas e as 3 dores confirmadas ou trocadas</td></tr>
+          <tr><td><b>Nome e cara</b></td><td>nov/2026</td><td>quem topar</td><td>Nome escolhido em votação aberta</td></tr>
+          <tr><td><b>Primeira versão</b></td><td>dez/2026–jan/2027</td><td>Kevin</td><td>Criar evento, aviso, página e busca funcionando</td></tr>
+          <tr><td><b>Casas âncora</b></td><td>jan/2027</td><td>Kevin + quem chegar</td><td>5 a 8 casas com a agenda cadastrada</td></tr>
+          <tr><td><b>Beta fechado</b></td><td>fev–mar/2027</td><td>casas e bandas parceiras</td><td>4 semanas seguidas de agenda completa</td></tr>
+          <tr class="goal"><td><b>Abre pro público</b></td><td>abr/2027</td><td>todo mundo</td><td>Critérios do piloto em andamento</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Chamado: gente pra construir junto -->
+  <section class="slide" data-title="Chamado">
+    <div class="inner">
+      <div class="kicker">Chamado</div>
+      <h2>Isso não se faz <span class="accent">sozinho</span></h2>
+      <p class="lead">Procuro gente pra construir junto, principalmente na <strong>arte</strong>: a cara do app tem que sair de quem faz flyer, capa e zine na cena, não de banco de imagem.</p>
+      <div class="grid-3 crew">
+        <div class="card main"><span class="num">ARTE E IDENTIDADE</span><h3>Ilustração, logo, a cara do app</h3><p>Flyers, ícones, ilustrações e a identidade visual. O nome ainda tá em aberto, a estética também.</p></div>
+        <div class="card"><span class="num">DESIGN</span><h3>Telas e experiência</h3><p>Desenhar as telas e testar com quem vai usar de verdade.</p></div>
+        <div class="card"><span class="num">DESENVOLVIMENTO</span><h3>Código aberto</h3><p>Front, back, mapa. Qualquer nível: dá pra aprender junto.</p></div>
+        <div class="card"><span class="num">COMUNICAÇÃO</span><h3>Texto, foto e vídeo</h3><p>Contar o projeto, registrar os rolês, fazer chegar em quem precisa.</p></div>
+        <div class="card"><span class="num">CENA</span><h3>Quem conhece as casas</h3><p>Produção, contato com coletivos, cadastro da agenda e aprovação de perfis.</p></div>
+        <div class="card any"><span class="num">QUALQUER BAGAGEM</span><h3>Sabe fazer algo que não tá aqui?</h3><p>Direito, tradução, educação, organização… Chega junto que a gente encontra o lugar.</p></div>
+      </div>
+      <p class="lead" style="margin-top:1em">E principalmente quem tiver <span class="mark">ódio do fascismo</span> e vontade de colaborar. <span class="muted">Me chama no fim da apresentação.</span></p>
+    </div>
+  </section>
+
+  <!-- Pedidos concretos -->
+  <section class="slide ask" data-title="Pedidos">
+    <div class="inner">
+      <div class="kicker">Onde vocês entram</div>
+      <h2>O que a gente pede hoje</h2>
+      <p class="lead" style="margin-bottom:1em">Ainda tá tudo no papel. <strong>O que vai ser construído depende das respostas de vocês.</strong></p>
+      <div class="grid-4">
+        <div class="card"><span class="num">01</span><h3>Cedam 3 rolês</h3><p>Os próximos 3 rolês de vocês, pra gente cadastrar no beta.</p></div>
+        <div class="card"><span class="num">02</span><h3>Indiquem uma casa âncora</h3><p>Um espaço ou coletivo que topa ter a agenda inteira lá.</p></div>
+        <div class="card"><span class="num">03</span><h3>Topem aprovar perfis</h3><p>Entrar no grupo de aprovação, com rodízio.</p></div>
+        <div class="card"><span class="num">04</span><h3>Continuem a conversa</h3><p>Me chama no fim pra trocar contato e seguir junto.</p></div>
+      </div>
+      <div class="reply" id="enquete" hidden>
+        <div class="qr" id="qr-enquete"></div>
+        <div>
+          <span class="small muted">Enquete · uns 3 minutos</span>
+          <div id="enquete-link"></div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- 16. Fechamento -->
+  <!-- Fechamento -->
   <section class="slide cover" data-title="Fechamento">
     <div class="inner">
       <div class="kicker">Bora conversar</div>
       <h1>Bora organizar<br><span class="tape">a cena?</span></h1>
-      <ul class="list" style="margin-top:2em; max-width: 40em">
-        <li>Qual problema mais pega pra vocês hoje?</li>
-        <li>Vocês usariam pra divulgar os rolês de vocês?</li>
-        <li>Que nome vocês dariam pra isso?</li>
-      </ul>
-      <p class="note">Protótipo: <a class="proto-url" style="display:inline" href="https://knv-os.github.io/under/prototipo.html" target="_blank" rel="noopener">knv-os.github.io/under/prototipo.html</a></p>
+      <p class="lead" style="margin-top:1.2em">Ninguém vai fazer isso pela gente.</p>
+      <div class="reply" style="margin-top:1.6em">
+        <div>
+          <span class="small muted">Rascunhos dos protótipos</span>
+          <div><a class="proto-url" style="display:inline" href="https://knv-os.github.io/under/prototipo-banda.html" target="_blank" rel="noopener">banda</a> · <a class="proto-url" style="display:inline" href="https://knv-os.github.io/under/prototipo.html" target="_blank" rel="noopener">público</a> · <span class="mono">knv-os.github.io/under</span></div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -882,34 +1289,62 @@
     }
   })();
 
-  // ---------- protótipo ao vivo ----------
-  const protoSlide = document.getElementById('slide-proto');
-  const protoFrame = document.getElementById('proto-frame');
-  const tour = document.getElementById('tour');
-  let protoTela = null;
-
-  // só carrega o iframe quando o slide abre, pra não puxar o mapa à toa
-  function loadProto(tela) {
-    if (tela === protoTela) return;
-    protoTela = tela;
-    // a query muda a URL e força recarregar; o protótipo lê o #evento-N ao abrir
-    protoFrame.src = tela === 'lista' ? 'prototipo.html' : `prototipo.html?tela=${tela}#${tela}`;
-    tour.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.tela === tela));
+  // ---------- protótipos ao vivo ----------
+  // cada um só carrega o iframe quando o slide abre, pra não puxar mapa à toa
+  function liveProto(slideId, frameId, tourId, first, urlFor) {
+    const slide = document.getElementById(slideId);
+    const frame = document.getElementById(frameId);
+    const tour = document.getElementById(tourId);
+    let tela = null;
+    function load(t) {
+      if (t === tela) return;
+      tela = t;
+      frame.src = urlFor(t);
+      tour.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.tela === t));
+    }
+    tour.addEventListener('click', e => {
+      const b = e.target.closest('[data-tela]');
+      if (b) load(b.dataset.tela);
+    });
+    // setas continuam passando slide mesmo com o foco dentro do protótipo (menos digitando num campo)
+    frame.addEventListener('load', () => {
+      try {
+        frame.contentDocument.addEventListener('keydown', e => {
+          if (e.target.closest?.('input, select, textarea')) return;
+          if (['ArrowRight', 'PageDown'].includes(e.key)) { e.preventDefault(); window.focus(); show(current + 1); }
+          else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); window.focus(); show(current - 1); }
+        });
+      } catch (e) {} // aberto via file:// o iframe fica isolado
+    });
+    return { slide, open: () => { if (!tela) load(first); } };
   }
-  tour.addEventListener('click', e => {
-    const b = e.target.closest('[data-tela]');
-    if (b) loadProto(b.dataset.tela);
-  });
+  const lives = [
+    // público: a query muda a URL e força recarregar; o protótipo lê o #evento-N ao abrir
+    liveProto('slide-proto', 'proto-frame', 'tour', 'lista', t => t === 'lista' ? 'prototipo.html' : `prototipo.html?tela=${t}#${t}`),
+    // banda: navega pelo # sem recarregar
+    liveProto('slide-band', 'band-frame', 'tour-band', 'painel', t => `prototipo-banda.html#${t}`),
+  ];
 
-  // setas continuam passando slide mesmo com o foco dentro do protótipo
-  protoFrame.addEventListener('load', () => {
-    try {
-      protoFrame.contentDocument.addEventListener('keydown', e => {
-        if (['ArrowRight', 'PageDown'].includes(e.key)) { e.preventDefault(); window.focus(); show(current + 1); }
-        else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); window.focus(); show(current - 1); }
-      });
-    } catch (e) {} // aberto via file:// o iframe fica isolado
-  });
+  // o protótipo da banda roda em tamanho de computador e é reduzido pra caber no notebook
+  const BAND_W = 1180, BAND_H = 680;
+  function fitLaptop() {
+    const laptop = document.getElementById('band-laptop');
+    const screen = document.getElementById('band-screen');
+    const frame = document.getElementById('band-frame');
+    const avail = laptop.parentElement.clientWidth;
+    if (avail < 640) { // celular: usa o layout de celular do próprio protótipo
+      screen.style.width = '100%'; screen.style.height = '70vh';
+      Object.assign(frame.style, { width: '100%', height: '100%', transform: 'none' });
+      laptop.style.width = '100%';
+      return;
+    }
+    const w = Math.min(avail - 20, innerHeight * .46 * BAND_W / BAND_H);
+    laptop.style.width = `${w + 20}px`;
+    screen.style.width = `${w + 20}px`; screen.style.height = `${w * BAND_H / BAND_W + 22}px`;
+    Object.assign(frame.style, { width: `${BAND_W}px`, height: `${BAND_H}px`, transform: `scale(${w / BAND_W})` });
+  }
+  addEventListener('resize', fitLaptop);
+  fitLaptop();
 
   try {
     new QRCode(document.getElementById('qr'), {
@@ -917,6 +1352,18 @@
       width: 192, height: 192, colorDark: '#0c0b0a', colorLight: '#ffffff',
     });
   } catch (e) {} // sem o QR, o link escrito continua ali
+
+  // ---------- enquete ----------
+  // cole aqui o link da enquete (Google Forms, Tally etc.) e o QR aparece no slide de pedidos
+  const ENQUETE_URL = '';
+  if (ENQUETE_URL) {
+    document.getElementById('enquete').hidden = false;
+    try {
+      new QRCode(document.getElementById('qr-enquete'), { text: ENQUETE_URL, width: 192, height: 192, colorDark: '#0c0b0a', colorLight: '#ffffff' });
+    } catch (e) {}
+    document.getElementById('enquete-link').innerHTML =
+      `<a class="proto-url" href="${ENQUETE_URL}" target="_blank" rel="noopener">${ENQUETE_URL.replace(/^https?:\/\//, '')}</a>`;
+  }
 
   // ---------- navegação ----------
   const slides = [...document.querySelectorAll('.slide')];
@@ -934,7 +1381,7 @@
     progress.style.width = `${((current + 1) / slides.length) * 100}%`;
     prevBtn.disabled = current === 0;
     nextBtn.disabled = current === slides.length - 1;
-    if (slides[current] === protoSlide && !protoTela) loadProto('lista');
+    lives.forEach(l => { if (slides[current] === l.slide) l.open(); });
     try { history.replaceState(null, '', `#${current + 1}`); } catch (e) {}
   }
 
